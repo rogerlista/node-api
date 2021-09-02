@@ -16,6 +16,7 @@ class HttpRequest {
   static badRequest() {
     return {
       statusCode: 400,
+      body: new MissingParamError('e-mail'),
     }
   }
 
@@ -23,6 +24,13 @@ class HttpRequest {
     return {
       statusCode: 500,
     }
+  }
+}
+
+class MissingParamError extends Error {
+  constructor(paramError) {
+    super(`${paramError} é obrigatório.`)
+    this.name = this.constructor.name
   }
 }
 
@@ -38,6 +46,7 @@ describe('Login Router', () => {
     const httpResponse = sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError('e-mail'))
   })
 
   test('deve retornar status code 400 se a senha não for informada', () => {
