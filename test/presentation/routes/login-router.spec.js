@@ -1,9 +1,7 @@
 class LoginRouter {
   route(httpRequest) {
     if (!httpRequest || !httpRequest.body) {
-      return {
-        statusCode: 500,
-      }
+      return HttpRequest.serverError()
     }
 
     const { email, senha } = httpRequest.body
@@ -18,6 +16,12 @@ class HttpRequest {
   static badRequest() {
     return {
       statusCode: 400,
+    }
+  }
+
+  static serverError() {
+    return {
+      statusCode: 500,
     }
   }
 }
