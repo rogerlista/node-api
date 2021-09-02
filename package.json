@@ -1,0 +1,35 @@
+{
+  "name": "node-js-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "check": "npx npm-check-updates -u && npm install",
+    "format": "prettier . --write",
+    "lint": "eslint . --fix",
+    "prepare": "husky install",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test:verbose": "jest --passWithNoTests --runInBand",
+    "test:unit": "npm test -- --watch -c jest-unit-config.js",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:ci": "npm test -- --coverage",
+    "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-config-standard": "16.0.3",
+    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "5.1.0",
+    "git-commit-msg-linter": "3.2.8",
+    "husky": "7.0.2",
+    "jest": "27.1.0",
+    "lint-staged": "11.1.2",
+    "prettier": "2.3.2"
+  }
+}

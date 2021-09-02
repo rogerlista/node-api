@@ -1,0 +1,56 @@
+# Logs
+logs
+tmp
+*.log
+lerna-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.csv
+*.dat
+*.gz
+*.out
+*.pid
+*.pid.lock
+*.seed
+*.sqlite
+*.swp
+*.txt
+
+# Coverage directory used by tools like istanbul
+lib-cov
+coverage
+coverage.*
+*.lcov
+
+# Dependency directories
+node_modules
+
+# Database directory
+database
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional eslint cache
+.eslintcache
+
+# API keys and secrets
+.env
+globalConfig.json
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built files
+dist
+
+# Editor
+.vscode
