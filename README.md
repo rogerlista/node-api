@@ -1,2 +1,3 @@
-# js-template
-JavaScript Template
+# node-api
+
+API escrita em JavaScript utilizando TDD
