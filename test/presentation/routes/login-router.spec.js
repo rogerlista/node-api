@@ -1,7 +1,9 @@
 class LoginRouter {
   route(httpRequest) {
-    return {
-      statusCode: 400,
+    if (!httpRequest.body.email || !httpRequest.body.senha) {
+      return {
+        statusCode: 400,
+      }
     }
   }
 }
@@ -12,6 +14,19 @@ describe('Login Router', () => {
     const httpRequest = {
       body: {
         senha: 'qualquer-senha',
+      },
+    }
+
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+  })
+
+  test('deve retornar status code 400 se a senha não for informada', () => {
+    const sut = new LoginRouter()
+    const httpRequest = {
+      body: {
+        email: 'qualquer_email@mail.com',
       },
     }
 
