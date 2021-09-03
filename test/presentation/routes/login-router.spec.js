@@ -1,9 +1,17 @@
 const LoginRouter = require('../../../src/presentation/routes/login-router')
 const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
 
+const makeSut = () => {
+  const sut = new LoginRouter()
+
+  return {
+    sut,
+  }
+}
+
 describe('Login Router', () => {
   test('deve retornar status code 400 se o e-mail não for informado', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         senha: 'qualquer-senha',
@@ -17,7 +25,7 @@ describe('Login Router', () => {
   })
 
   test('deve retornar status code 400 se a senha não for informada', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         email: 'qualquer_email@mail.com',
@@ -31,7 +39,7 @@ describe('Login Router', () => {
   })
 
   test('deve retornar status code 500 se httpRequest não for passada', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
 
     const httpResponse = sut.route()
 
@@ -39,7 +47,7 @@ describe('Login Router', () => {
   })
 
   test('deve retornar status code 500 se httpRequest não conter um body', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
 
     const httpResponse = sut.route({})
 
