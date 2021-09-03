@@ -17,10 +17,10 @@ class LoginRouter {
 }
 
 class HttpRequest {
-  static badRequest(paramError) {
+  static badRequest(nomeDoParametro) {
     return {
       statusCode: 400,
-      body: new MissingParamError(paramError),
+      body: new ParametroObrigatorioError(nomeDoParametro),
     }
   }
 
@@ -31,9 +31,9 @@ class HttpRequest {
   }
 }
 
-class MissingParamError extends Error {
-  constructor(paramError) {
-    super(`${paramError} é obrigatório.`)
+class ParametroObrigatorioError extends Error {
+  constructor(nomeDoParametro) {
+    super(`${nomeDoParametro} é obrigatório.`)
     this.name = this.constructor.name
   }
 }
@@ -50,7 +50,7 @@ describe('Login Router', () => {
     const httpResponse = sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('e-mail'))
+    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('e-mail'))
   })
 
   test('deve retornar status code 400 se a senha não for informada', () => {
@@ -64,7 +64,7 @@ describe('Login Router', () => {
     const httpResponse = sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('senha'))
+    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('senha'))
   })
 
   test('deve retornar status code 500 se httpRequest não for passada', () => {
