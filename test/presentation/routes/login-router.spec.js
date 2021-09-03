@@ -2,10 +2,19 @@ const LoginRouter = require('../../../src/presentation/routes/login-router')
 const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
 
 const makeSut = () => {
-  const sut = new LoginRouter()
+  class AuthUseCase {
+    auth({ email, senha }) {
+      this.email = email
+      this.senha = senha
+    }
+  }
+
+  const authUseCase = new AuthUseCase()
+  const sut = new LoginRouter(authUseCase)
 
   return {
     sut,
+    authUseCase,
   }
 }
 
@@ -52,5 +61,20 @@ describe('Login Router', () => {
     const httpResponse = sut.route({})
 
     expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('deve chamar AuthUseCase com os parâmetros corretos', () => {
+    const { sut, authUseCase } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'qualquer_email@mail.com',
+        senha: 'qualquer_senha',
+      },
+    }
+
+    sut.route(httpRequest)
+
+    expect(authUseCase.email).toBe(httpRequest.body.email)
+    expect(authUseCase.senha).toBe(httpRequest.body.senha)
   })
 })
