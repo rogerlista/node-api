@@ -75,7 +75,7 @@ describe('Login Router', () => {
     expect(httpResponse.statusCode).toBe(500)
   })
 
-  test('deve retornar status code 500 se httpRequest não tiver um body', () => {
+  test('deve retornar status code 500 se httpRequest não conter um body', () => {
     const sut = new LoginRouter()
 
     const httpResponse = sut.route({})
