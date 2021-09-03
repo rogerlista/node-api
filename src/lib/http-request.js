@@ -1,4 +1,5 @@
 const ParametroObrigatorioError = require('./error/parametro-obrigatorio-error')
+const UnauthorizedError = require('./error/unauthorized-error')
 
 module.exports = class HttpRequest {
   static badRequest(nomeDoParametro) {
@@ -11,6 +12,13 @@ module.exports = class HttpRequest {
   static serverError() {
     return {
       statusCode: 500,
+    }
+  }
+
+  static unauthorizedError() {
+    return {
+      statusCode: 401,
+      body: new UnauthorizedError(),
     }
   }
 }

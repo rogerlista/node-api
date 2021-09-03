@@ -1,5 +1,6 @@
 const LoginRouter = require('../../../src/presentation/routes/login-router')
 const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
+const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 
 const makeSut = () => {
   class AuthUseCase {
@@ -76,5 +77,20 @@ describe('Login Router', () => {
 
     expect(authUseCase.email).toBe(httpRequest.body.email)
     expect(authUseCase.senha).toBe(httpRequest.body.senha)
+  })
+
+  test('deve retornar status code 401 se as credencias informadas forem inválidas', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'email_invalido@mail.com',
+        senha: 'senha_invalida',
+      },
+    }
+
+    const httpResponse = sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
   })
 })
