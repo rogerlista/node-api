@@ -1,42 +1,5 @@
-class LoginRouter {
-  route(httpRequest) {
-    if (!httpRequest || !httpRequest.body) {
-      return HttpRequest.serverError()
-    }
-
-    const { email, senha } = httpRequest.body
-
-    if (!email) {
-      return HttpRequest.badRequest('e-mail')
-    }
-
-    if (!senha) {
-      return HttpRequest.badRequest('senha')
-    }
-  }
-}
-
-class HttpRequest {
-  static badRequest(nomeDoParametro) {
-    return {
-      statusCode: 400,
-      body: new ParametroObrigatorioError(nomeDoParametro),
-    }
-  }
-
-  static serverError() {
-    return {
-      statusCode: 500,
-    }
-  }
-}
-
-class ParametroObrigatorioError extends Error {
-  constructor(nomeDoParametro) {
-    super(`${nomeDoParametro} é obrigatório.`)
-    this.name = this.constructor.name
-  }
-}
+const LoginRouter = require('../../../src/presentation/routes/login-router')
+const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
 
 describe('Login Router', () => {
   test('deve retornar status code 400 se o e-mail não for informado', () => {
