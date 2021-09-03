@@ -3,19 +3,19 @@ const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obri
 const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 
 const makeSut = () => {
-  class AuthUseCase {
+  class AuthUseCaseSpy {
     auth({ email, senha }) {
       this.email = email
       this.senha = senha
     }
   }
 
-  const authUseCase = new AuthUseCase()
-  const sut = new LoginRouter(authUseCase)
+  const authUseCaseSpy = new AuthUseCaseSpy()
+  const sut = new LoginRouter(authUseCaseSpy)
 
   return {
     sut,
-    authUseCase,
+    authUseCaseSpy,
   }
 }
 
@@ -64,8 +64,8 @@ describe('Login Router', () => {
     expect(httpResponse.statusCode).toBe(500)
   })
 
-  test('deve chamar AuthUseCase com os parâmetros corretos', () => {
-    const { sut, authUseCase } = makeSut()
+  test('deve chamar AuthUseCaseSpy com os parâmetros corretos', () => {
+    const { sut, authUseCaseSpy } = makeSut()
     const httpRequest = {
       body: {
         email: 'qualquer_email@mail.com',
@@ -75,8 +75,8 @@ describe('Login Router', () => {
 
     sut.route(httpRequest)
 
-    expect(authUseCase.email).toBe(httpRequest.body.email)
-    expect(authUseCase.senha).toBe(httpRequest.body.senha)
+    expect(authUseCaseSpy.email).toBe(httpRequest.body.email)
+    expect(authUseCaseSpy.senha).toBe(httpRequest.body.senha)
   })
 
   test('deve retornar status code 401 se as credencias informadas forem inválidas', () => {
