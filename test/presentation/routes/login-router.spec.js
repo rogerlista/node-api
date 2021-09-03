@@ -6,17 +6,21 @@ class LoginRouter {
 
     const { email, senha } = httpRequest.body
 
-    if (!email || !senha) {
-      return HttpRequest.badRequest()
+    if (!email) {
+      return HttpRequest.badRequest('e-mail')
+    }
+
+    if (!senha) {
+      return HttpRequest.badRequest('senha')
     }
   }
 }
 
 class HttpRequest {
-  static badRequest() {
+  static badRequest(paramError) {
     return {
       statusCode: 400,
-      body: new MissingParamError('e-mail'),
+      body: new MissingParamError(paramError),
     }
   }
 
@@ -60,6 +64,7 @@ describe('Login Router', () => {
     const httpResponse = sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError('senha'))
   })
 
   test('deve retornar status code 500 se httpRequest não for passada', () => {
