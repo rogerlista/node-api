@@ -1,5 +1,6 @@
 const LoginRouter = require('../../../src/presentation/routes/login-router')
 const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
+const ServerError = require('../../../src/lib/error/server-error')
 const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 
 const makeSut = () => {
@@ -106,5 +107,6 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 })
