@@ -56,7 +56,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('e-mail'))
+    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('E-mail'))
   })
 
   test('deve retornar status code 400 se a senha não for informada', async () => {
@@ -70,7 +70,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('senha'))
+    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('Senha'))
   })
 
   test('deve retornar status code 500 se httpRequest não for passada', async () => {

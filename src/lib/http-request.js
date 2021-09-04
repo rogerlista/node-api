@@ -1,12 +1,11 @@
-const ParametroObrigatorioError = require('./error/parametro-obrigatorio-error')
 const ServerError = require('./error/server-error')
 const UnauthorizedError = require('./error/unauthorized-error')
 
 module.exports = class HttpRequest {
-  static badRequest(nomeDoParametro) {
+  static badRequest(error) {
     return {
       statusCode: 400,
-      body: new ParametroObrigatorioError(nomeDoParametro),
+      body: error,
     }
   }
 

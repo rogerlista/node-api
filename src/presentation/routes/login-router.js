@@ -1,3 +1,4 @@
+const ParametroObrigatorioError = require('../../lib/error/parametro-obrigatorio-error')
 const HttpRequest = require('../../lib/http-request')
 
 module.exports = class LoginRouter {
@@ -10,11 +11,11 @@ module.exports = class LoginRouter {
       const { email, senha } = httpRequest.body
 
       if (!email) {
-        return HttpRequest.badRequest('e-mail')
+        return HttpRequest.badRequest(new ParametroObrigatorioError('E-mail'))
       }
 
       if (!senha) {
-        return HttpRequest.badRequest('senha')
+        return HttpRequest.badRequest(new ParametroObrigatorioError('Senha'))
       }
 
       const accessToken = await this.authUseCase.auth({ email, senha })
