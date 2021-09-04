@@ -5,7 +5,7 @@ module.exports = class LoginRouter {
     this.authUseCase = authUseCase
   }
 
-  route(httpRequest) {
+  async route(httpRequest) {
     if (!httpRequest || !httpRequest.body) {
       return HttpRequest.serverError()
     }
@@ -20,7 +20,7 @@ module.exports = class LoginRouter {
       return HttpRequest.badRequest('senha')
     }
 
-    this.authUseCase.auth({ email, senha })
+    await this.authUseCase.auth({ email, senha })
 
     return HttpRequest.unauthorizedError()
   }

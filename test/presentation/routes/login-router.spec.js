@@ -4,7 +4,7 @@ const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 
 const makeSut = () => {
   class AuthUseCaseSpy {
-    auth({ email, senha }) {
+    async auth({ email, senha }) {
       this.email = email
       this.senha = senha
     }
@@ -20,7 +20,7 @@ const makeSut = () => {
 }
 
 describe('Login Router', () => {
-  test('deve retornar status code 400 se o e-mail não for informado', () => {
+  test('deve retornar status code 400 se o e-mail não for informado', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -28,13 +28,13 @@ describe('Login Router', () => {
       },
     }
 
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new ParametroObrigatorioError('e-mail'))
   })
 
-  test('deve retornar status code 400 se a senha não for informada', () => {
+  test('deve retornar status code 400 se a senha não for informada', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -42,29 +42,29 @@ describe('Login Router', () => {
       },
     }
 
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new ParametroObrigatorioError('senha'))
   })
 
-  test('deve retornar status code 500 se httpRequest não for passada', () => {
+  test('deve retornar status code 500 se httpRequest não for passada', async () => {
     const { sut } = makeSut()
 
-    const httpResponse = sut.route()
+    const httpResponse = await sut.route()
 
     expect(httpResponse.statusCode).toBe(500)
   })
 
-  test('deve retornar status code 500 se httpRequest não conter um body', () => {
+  test('deve retornar status code 500 se httpRequest não conter um body', async () => {
     const { sut } = makeSut()
 
-    const httpResponse = sut.route({})
+    const httpResponse = await sut.route({})
 
     expect(httpResponse.statusCode).toBe(500)
   })
 
-  test('deve chamar AuthUseCaseSpy com os parâmetros corretos', () => {
+  test('deve chamar AuthUseCaseSpy com os parâmetros corretos', async () => {
     const { sut, authUseCaseSpy } = makeSut()
     const httpRequest = {
       body: {
@@ -73,13 +73,13 @@ describe('Login Router', () => {
       },
     }
 
-    sut.route(httpRequest)
+    await sut.route(httpRequest)
 
     expect(authUseCaseSpy.email).toBe(httpRequest.body.email)
     expect(authUseCaseSpy.senha).toBe(httpRequest.body.senha)
   })
 
-  test('deve retornar status code 401 se as credencias informadas forem inválidas', () => {
+  test('deve retornar status code 401 se as credencias informadas forem inválidas', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -88,7 +88,7 @@ describe('Login Router', () => {
       },
     }
 
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(401)
     expect(httpResponse.body).toEqual(new UnauthorizedError())
