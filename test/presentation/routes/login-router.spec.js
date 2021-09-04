@@ -4,16 +4,7 @@ const ServerError = require('../../../src/lib/error/server-error')
 const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 
 const makeSut = () => {
-  class AuthUseCaseSpy {
-    async auth({ email, senha }) {
-      this.email = email
-      this.senha = senha
-
-      return this.accessToken
-    }
-  }
-
-  const authUseCaseSpy = new AuthUseCaseSpy()
+  const authUseCaseSpy = makeAuthUseCaseSpy()
   authUseCaseSpy.accessToken = 'token_valido'
   const sut = new LoginRouter(authUseCaseSpy)
 
@@ -23,15 +14,27 @@ const makeSut = () => {
   }
 }
 
-const makeSutError = () => {
+const makeAuthUseCaseSpy = () => {
   class AuthUseCaseSpy {
-    auth() {
+    async auth({ email, senha }) {
+      this.email = email
+      this.senha = senha
+
+      return this.accessToken
+    }
+  }
+
+  return new AuthUseCaseSpy()
+}
+
+const makeAuthUseCaseSpyWithError = () => {
+  class AuthUseCaseSpy {
+    async auth() {
       throw new Error()
     }
   }
 
-  const authUseCaseSpy = new AuthUseCaseSpy()
-  return new LoginRouter(authUseCaseSpy)
+  return new AuthUseCaseSpy()
 }
 
 const httpRequest = {
@@ -141,7 +144,8 @@ describe('Login Router', () => {
   })
 
   test('deve retornar o status code 500 se AuthUseCase lançar uma exceção', async () => {
-    const sut = makeSutError()
+    const authUseCaseSpy = makeAuthUseCaseSpyWithError()
+    const sut = new LoginRouter(authUseCaseSpy)
 
     const httpResponse = await sut.route(httpRequest)
 
