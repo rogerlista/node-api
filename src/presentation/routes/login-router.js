@@ -1,9 +1,11 @@
+const ParametroInvalidoError = require('../../lib/error/parametro-invalido-error')
 const ParametroObrigatorioError = require('../../lib/error/parametro-obrigatorio-error')
 const HttpRequest = require('../../lib/http-request')
 
 module.exports = class LoginRouter {
-  constructor(authUseCase) {
+  constructor(authUseCase, emailValidator) {
     this.authUseCase = authUseCase
+    this.emailValidator = emailValidator
   }
 
   async route(httpRequest) {
@@ -12,6 +14,10 @@ module.exports = class LoginRouter {
 
       if (!email) {
         return HttpRequest.badRequest(new ParametroObrigatorioError('E-mail'))
+      }
+
+      if (!this.emailValidator.isValid(email)) {
+        return HttpRequest.badRequest(new ParametroInvalidoError('E-mail'))
       }
 
       if (!senha) {

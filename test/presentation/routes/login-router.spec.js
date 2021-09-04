@@ -1,16 +1,21 @@
 const LoginRouter = require('../../../src/presentation/routes/login-router')
+const ParametroInvalidoError = require('../../../src/lib/error/parametro-invalido-error')
 const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
 const ServerError = require('../../../src/lib/error/server-error')
 const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 
 const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCaseSpy()
+  const emailValidatorSpy = makeEmailValidatorSpy()
+
   authUseCaseSpy.accessToken = 'token_valido'
-  const sut = new LoginRouter(authUseCaseSpy)
+  emailValidatorSpy.isEmailValid = true
+  const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy)
 
   return {
     sut,
     authUseCaseSpy,
+    emailValidatorSpy,
   }
 }
 
@@ -35,6 +40,16 @@ const makeAuthUseCaseSpyWithError = () => {
   }
 
   return new AuthUseCaseSpy()
+}
+
+const makeEmailValidatorSpy = () => {
+  class EmailValidatorSpy {
+    isValid(email) {
+      return this.isEmailValid
+    }
+  }
+
+  return new EmailValidatorSpy()
 }
 
 const httpRequest = {
@@ -151,5 +166,15 @@ describe('Login Router', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('deve retornar o status code 400 se o email for inválido', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    emailValidatorSpy.isEmailValid = false
+
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new ParametroInvalidoError('E-mail'))
   })
 })
