@@ -8,20 +8,13 @@ const makeSut = () => {
     async auth({ email, senha }) {
       this.email = email
       this.senha = senha
-      this.accessToken = 'access_token_valido'
-
-      if (
-        this.email !== httpRequest.body.email ||
-        this.senha !== httpRequest.body.senha
-      ) {
-        return
-      }
 
       return this.accessToken
     }
   }
 
   const authUseCaseSpy = new AuthUseCaseSpy()
+  authUseCaseSpy.accessToken = 'token_valido'
   const sut = new LoginRouter(authUseCaseSpy)
 
   return {
@@ -105,7 +98,8 @@ describe('Login Router', () => {
   })
 
   test('deve retornar status code 401 se as credencias informadas forem inválidas', async () => {
-    const { sut } = makeSut()
+    const { sut, authUseCaseSpy } = makeSut()
+    authUseCaseSpy.accessToken = null
     const httpRequest = {
       body: {
         email: 'email_invalido@mail.com',
