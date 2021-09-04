@@ -186,4 +186,14 @@ describe('Login Router', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new ParametroInvalidoError('E-mail'))
   })
+
+  test('deve retornar o status code 500 se EmailValidator não for passado', async () => {
+    const authUseCaseSpy = makeAuthUseCaseSpy()
+    const sut = new LoginRouter(authUseCaseSpy)
+
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
 })
