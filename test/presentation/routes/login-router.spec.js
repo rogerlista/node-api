@@ -93,4 +93,18 @@ describe('Login Router', () => {
     expect(httpResponse.statusCode).toBe(401)
     expect(httpResponse.body).toEqual(new UnauthorizedError())
   })
+
+  test('deve retornar o status code 500 se AuthUseCase não for passado', async () => {
+    const sut = new LoginRouter()
+    const httpRequest = {
+      body: {
+        email: 'email_invalido@mail.com',
+        senha: 'senha_invalida',
+      },
+    }
+
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
