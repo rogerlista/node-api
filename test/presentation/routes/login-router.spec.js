@@ -20,12 +20,19 @@ const makeSut = () => {
   }
 }
 
+const httpRequest = {
+  body: {
+    email: 'email_valido@mail.com',
+    senha: 'senha_valida',
+  },
+}
+
 describe('Login Router', () => {
   test('deve retornar status code 400 se o e-mail não for informado', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        senha: 'qualquer-senha',
+        senha: 'senha_valida',
       },
     }
 
@@ -39,7 +46,7 @@ describe('Login Router', () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        email: 'qualquer_email@mail.com',
+        email: 'email_valido@mail.com',
       },
     }
 
@@ -69,12 +76,6 @@ describe('Login Router', () => {
 
   test('deve chamar AuthUseCaseSpy com os parâmetros corretos', async () => {
     const { sut, authUseCaseSpy } = makeSut()
-    const httpRequest = {
-      body: {
-        email: 'qualquer_email@mail.com',
-        senha: 'qualquer_senha',
-      },
-    }
 
     await sut.route(httpRequest)
 
@@ -99,12 +100,6 @@ describe('Login Router', () => {
 
   test('deve retornar o status code 500 se AuthUseCase não for passado', async () => {
     const sut = new LoginRouter()
-    const httpRequest = {
-      body: {
-        email: 'email_invalido@mail.com',
-        senha: 'senha_invalida',
-      },
-    }
 
     const httpResponse = await sut.route(httpRequest)
 
@@ -114,12 +109,6 @@ describe('Login Router', () => {
 
   test('deve retornar o status code 500 se AuthUserCase não tiver o método auth', async () => {
     const sut = new LoginRouter({})
-    const httpRequest = {
-      body: {
-        email: 'email_invalido@mail.com',
-        senha: 'senha_invalida',
-      },
-    }
 
     const httpResponse = await sut.route(httpRequest)
 
