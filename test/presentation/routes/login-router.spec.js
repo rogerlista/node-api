@@ -55,6 +55,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route()
 
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('deve retornar status code 500 se httpRequest não conter um body', async () => {
@@ -63,6 +64,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route({})
 
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('deve chamar AuthUseCaseSpy com os parâmetros corretos', async () => {
