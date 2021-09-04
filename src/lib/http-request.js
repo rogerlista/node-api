@@ -10,6 +10,13 @@ module.exports = class HttpRequest {
     }
   }
 
+  static ok(data) {
+    return {
+      statusCode: 200,
+      body: data,
+    }
+  }
+
   static serverError() {
     return {
       statusCode: 500,

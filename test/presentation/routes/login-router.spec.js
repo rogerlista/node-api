@@ -8,6 +8,16 @@ const makeSut = () => {
     async auth({ email, senha }) {
       this.email = email
       this.senha = senha
+      this.accessToken = 'access_token_valido'
+
+      if (
+        this.email !== httpRequest.body.email ||
+        this.senha !== httpRequest.body.senha
+      ) {
+        return
+      }
+
+      return this.accessToken
     }
   }
 
@@ -107,6 +117,15 @@ describe('Login Router', () => {
 
     expect(httpResponse.statusCode).toBe(401)
     expect(httpResponse.body).toEqual(new UnauthorizedError())
+  })
+
+  test('deve retornar o status code 200 quando as credenciais forem válidas', async () => {
+    const { sut, authUseCaseSpy } = makeSut()
+
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body).toEqual(authUseCaseSpy.accessToken)
   })
 
   test('deve retornar o status code 500 se AuthUseCase não for passado', async () => {
