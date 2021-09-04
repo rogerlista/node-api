@@ -111,4 +111,19 @@ describe('Login Router', () => {
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
+
+  test('deve retornar o status code 500 se AuthUserCase não tiver o método auth', async () => {
+    const sut = new LoginRouter({})
+    const httpRequest = {
+      body: {
+        email: 'email_invalido@mail.com',
+        senha: 'senha_invalida',
+      },
+    }
+
+    const httpResponse = await sut.route(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
 })
