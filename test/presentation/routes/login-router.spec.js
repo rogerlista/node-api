@@ -7,9 +7,6 @@ const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
 const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCaseSpy()
   const emailValidatorSpy = makeEmailValidatorSpy()
-
-  authUseCaseSpy.accessToken = 'token_valido'
-  emailValidatorSpy.isEmailValid = true
   const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy)
 
   return {
@@ -29,7 +26,10 @@ const makeAuthUseCaseSpy = () => {
     }
   }
 
-  return new AuthUseCaseSpy()
+  const authUseCaseSpy = new AuthUseCaseSpy()
+  authUseCaseSpy.accessToken = 'token_valido'
+
+  return authUseCaseSpy
 }
 
 const makeAuthUseCaseSpyWithError = () => {
@@ -50,7 +50,10 @@ const makeEmailValidatorSpy = () => {
     }
   }
 
-  return new EmailValidatorSpy()
+  const emailValidatorSpy = new EmailValidatorSpy()
+  emailValidatorSpy.isEmailValid = true
+
+  return emailValidatorSpy
 }
 
 const makeEmailValidatorSpyWithError = () => {
