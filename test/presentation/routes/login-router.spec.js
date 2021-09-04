@@ -20,6 +20,17 @@ const makeSut = () => {
   }
 }
 
+const makeSutError = () => {
+  class AuthUseCaseSpy {
+    auth() {
+      throw new Error()
+    }
+  }
+
+  const authUseCaseSpy = new AuthUseCaseSpy()
+  return new LoginRouter(authUseCaseSpy)
+}
+
 const httpRequest = {
   body: {
     email: 'email_valido@mail.com',
@@ -117,14 +128,7 @@ describe('Login Router', () => {
   })
 
   test('deve retornar o status code 500 se AuthUseCase lançar uma exceção', async () => {
-    class AuthUseCaseSpy {
-      auth() {
-        throw new Error()
-      }
-    }
-
-    const authUseCaseSpy = new AuthUseCaseSpy()
-    const sut = new LoginRouter(authUseCaseSpy)
+    const sut = makeSutError()
 
     const httpResponse = await sut.route(httpRequest)
 
