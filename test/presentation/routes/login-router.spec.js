@@ -45,6 +45,7 @@ const makeAuthUseCaseSpyWithError = () => {
 const makeEmailValidatorSpy = () => {
   class EmailValidatorSpy {
     isValid(email) {
+      this.email = email
       return this.isEmailValid
     }
   }
@@ -166,6 +167,14 @@ describe('Login Router', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('deve chamar EmailValidator com o email correto', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+
+    await sut.route(httpRequest)
+
+    expect(emailValidatorSpy.email).toBe(httpRequest.body.email)
   })
 
   test('deve retornar o status code 400 se o email for inválido', async () => {
