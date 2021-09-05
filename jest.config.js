@@ -3,6 +3,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   collectCoverage: true,
   coverageProvider: 'v8',
-  roots: ['<rootDir>/src', '<rootDir>/test'],
+  roots: ['<rootDir>/src', '<rootDir>/test', '<rootDir>/__mocks__'],
   testEnvironment: 'node',
 }
