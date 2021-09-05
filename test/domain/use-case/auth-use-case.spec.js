@@ -12,9 +12,13 @@ class AuthUseCase {
   }
 }
 
+const makeSut = () => {
+  return new AuthUseCase()
+}
+
 describe('Auth Use Case', () => {
   test('deve lançar uma exceção se o e-mail não for informado', async () => {
-    const sut = new AuthUseCase()
+    const sut = makeSut()
 
     const promise = sut.auth()
 
@@ -24,7 +28,7 @@ describe('Auth Use Case', () => {
   })
 
   test('deve lançar uma exceção se a senha não for informada', async () => {
-    const sut = new AuthUseCase()
+    const sut = makeSut()
 
     const promise = sut.auth('email_valido@mail.com')
 
