@@ -1,6 +1,8 @@
-const ParametroInvalidoError = require('../../lib/error/parametro-invalido-error')
-const ParametroObrigatorioError = require('../../lib/error/parametro-obrigatorio-error')
-const HttpRequest = require('../../lib/http-request')
+const {
+  ParametroInvalidoError,
+  ParametroObrigatorioError,
+} = require('../../lib/error')
+const { HttpRequest } = require('../../lib')
 
 module.exports = class LoginRouter {
   constructor(authUseCase, emailValidator) {

@@ -1,8 +1,10 @@
 const LoginRouter = require('../../../src/presentation/routes/login-router')
-const ParametroInvalidoError = require('../../../src/lib/error/parametro-invalido-error')
-const ParametroObrigatorioError = require('../../../src/lib/error/parametro-obrigatorio-error')
-const ServerError = require('../../../src/lib/error/server-error')
-const UnauthorizedError = require('../../../src/lib/error/unauthorized-error')
+const {
+  ParametroInvalidoError,
+  ParametroObrigatorioError,
+  ServerError,
+  UnauthorizedError,
+} = require('../../../src/lib/error')
 
 const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCaseSpy()
