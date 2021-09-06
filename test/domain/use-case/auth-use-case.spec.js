@@ -135,4 +135,12 @@ describe('Auth Use Case', () => {
     expect(encrypterSpy.senha).toBe(credenciaisValidas.senha)
     expect(encrypterSpy.hashSenha).toBe(findUserByEmailRepositorySpy.user.senha)
   })
+
+  test('deve lançar uma exceção se Encrypter não for passado', async () => {
+    const sut = new AuthUseCase(makeFindUserByEmailRepositorySpy())
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
