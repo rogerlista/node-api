@@ -45,6 +45,11 @@ const makeSut = () => {
   }
 }
 
+const credenciaisValidas = {
+  email: 'email_valido@mail.com',
+  senha: 'senha_valida',
+}
+
 describe('Auth Use Case', () => {
   test('deve lançar uma exceção se o e-mail não for informado', async () => {
     const { sut } = makeSut()
@@ -69,7 +74,7 @@ describe('Auth Use Case', () => {
   test('deve chamar FindUserByEmailRepository com um e-mail correto', async () => {
     const { sut, findUserByEmailRepository } = makeSut()
 
-    await sut.auth({ email: 'email_valido@mail.com', senha: 'senha_valida' })
+    await sut.auth(credenciaisValidas)
 
     expect(findUserByEmailRepository.email).toBe('email_valido@mail.com')
   })
@@ -77,10 +82,7 @@ describe('Auth Use Case', () => {
   test('deve lançar uma exceção se FindUserByEmailRepository não for passado', async () => {
     const sut = new AuthUseCase()
 
-    const promise = sut.auth({
-      email: 'email_valido@mail.com',
-      senha: 'senha_valida',
-    })
+    const promise = sut.auth(credenciaisValidas)
 
     await expect(promise).rejects.toThrow(
       new ParametroObrigatorioError('Find User By Email Repository')
@@ -90,10 +92,7 @@ describe('Auth Use Case', () => {
   test('deve lançar uma exceção se FindUserByEmailRepository não tiver o método find', async () => {
     const sut = new AuthUseCase({})
 
-    const promise = sut.auth({
-      email: 'email_valido@mail.com',
-      senha: 'senha_valida',
-    })
+    const promise = sut.auth(credenciaisValidas)
 
     await expect(promise).rejects.toThrow(
       new ParametroInvalidoError('Find User By Email Repository')
