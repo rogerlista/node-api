@@ -12,7 +12,7 @@ const makeFindUserByEmailRepositorySpy = () => {
   const findUserByEmailRepositorySpy = new FindUserByEmailRepositorySpy()
   findUserByEmailRepositorySpy.user = {
     id: 'qualquer_id',
-    senha: 'qualquer_senha',
+    senha: 'hashed_senha',
   }
 
   return findUserByEmailRepositorySpy
@@ -20,9 +20,9 @@ const makeFindUserByEmailRepositorySpy = () => {
 
 const makeEncrypterSpy = () => {
   class EncrypterSpy {
-    async compare(senha, hashSenha) {
+    async compare(senha, hashedSenha) {
       this.senha = senha
-      this.hashSenha = hashSenha
+      this.hashedSenha = hashedSenha
 
       return this.isValid
     }
@@ -146,7 +146,9 @@ describe('Auth Use Case', () => {
     await sut.auth(credenciaisValidas)
 
     expect(encrypterSpy.senha).toBe(credenciaisValidas.senha)
-    expect(encrypterSpy.hashSenha).toBe(findUserByEmailRepositorySpy.user.senha)
+    expect(encrypterSpy.hashedSenha).toBe(
+      findUserByEmailRepositorySpy.user.senha
+    )
   })
 
   test('deve lançar uma exceção se Encrypter não for passado', async () => {
