@@ -204,5 +204,6 @@ describe('Auth Use Case', () => {
     const accessToken = await sut.auth(credenciaisValidas)
 
     expect(accessToken).toBe(tokenGeneratorSpy.accessToken)
+    expect(accessToken).toBeTruthy()
   })
 })
