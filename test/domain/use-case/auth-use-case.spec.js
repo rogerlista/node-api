@@ -190,4 +190,16 @@ describe('Auth Use Case', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('deve lançar uma exceção se TokenGenerate não tiver o método generate', async () => {
+    const sut = new AuthUseCase(
+      makeFindUserByEmailRepositorySpy(),
+      makeEncrypterSpy(),
+      {}
+    )
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
