@@ -42,27 +42,27 @@ const makeTokenGenerator = () => {
     }
   }
 
-  const tokenGenerateSpy = new TokenGeneratorSpy()
-  tokenGenerateSpy.accessToken = 'token_valido'
+  const tokenGeneratorSpy = new TokenGeneratorSpy()
+  tokenGeneratorSpy.accessToken = 'token_valido'
 
-  return tokenGenerateSpy
+  return tokenGeneratorSpy
 }
 
 const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const encrypterSpy = makeEncrypterSpy()
-  const tokenGenerateSpy = makeTokenGenerator()
+  const tokenGeneratorSpy = makeTokenGenerator()
   const sut = new AuthUseCase(
     findUserByEmailRepositorySpy,
     encrypterSpy,
-    tokenGenerateSpy
+    tokenGeneratorSpy
   )
 
   return {
     sut,
     findUserByEmailRepositorySpy,
     encrypterSpy,
-    tokenGenerateSpy,
+    tokenGeneratorSpy,
   }
 }
 
@@ -168,14 +168,14 @@ describe('Auth Use Case', () => {
   })
 
   test('deve chamar TokenGenerator com o ID de credencial válida', async () => {
-    const { sut, findUserByEmailRepositorySpy, tokenGenerateSpy } = makeSut()
+    const { sut, findUserByEmailRepositorySpy, tokenGeneratorSpy } = makeSut()
 
     await sut.auth(credenciaisValidas)
 
-    expect(tokenGenerateSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
+    expect(tokenGeneratorSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
   })
 
-  test('deve lançar uma exceção se TokenGenerate não for passado', async () => {
+  test('deve lançar uma exceção se TokenGenerator não for passado', async () => {
     const sut = new AuthUseCase(
       makeFindUserByEmailRepositorySpy(),
       makeEncrypterSpy()
@@ -186,7 +186,7 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('deve lançar uma exceção se TokenGenerate não tiver o método generate', async () => {
+  test('deve lançar uma exceção se TokenGenerator não tiver o método generate', async () => {
     const sut = new AuthUseCase(
       makeFindUserByEmailRepositorySpy(),
       makeEncrypterSpy(),
@@ -199,10 +199,10 @@ describe('Auth Use Case', () => {
   })
 
   test('deve retornar um accessToken se as credenciais forem válidas', async () => {
-    const { sut, tokenGenerateSpy } = makeSut()
+    const { sut, tokenGeneratorSpy } = makeSut()
 
     const accessToken = await sut.auth(credenciaisValidas)
 
-    expect(accessToken).toBe(tokenGenerateSpy.accessToken)
+    expect(accessToken).toBe(tokenGeneratorSpy.accessToken)
   })
 })
