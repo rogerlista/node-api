@@ -25,7 +25,11 @@ class AuthUseCase {
       throw new ParametroInvalidoError('Find User By Email Repository')
     }
 
-    await this.findUserByEmailRepository.find(email)
+    const user = await this.findUserByEmailRepository.find(email)
+
+    if (!user) {
+      return null
+    }
   }
 }
 
@@ -97,5 +101,13 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow(
       new ParametroInvalidoError('Find User By Email Repository')
     )
+  })
+
+  test('deve retornar null se FindUserByEmailRepository retornar null', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.auth(credenciaisValidas)
+
+    expect(accessToken).toBeNull()
   })
 })
