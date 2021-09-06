@@ -103,10 +103,13 @@ describe('Auth Use Case', () => {
     )
   })
 
-  test('deve retornar null se FindUserByEmailRepository retornar null', async () => {
+  test('deve retornar null se FindUserByEmailRepository receber um e-mail inexistente', async () => {
     const { sut } = makeSut()
 
-    const accessToken = await sut.auth(credenciaisValidas)
+    const accessToken = await sut.auth({
+      email: 'email_inexistente@mail.com',
+      senha: 'qualquer_senha',
+    })
 
     expect(accessToken).toBeNull()
   })
