@@ -4,8 +4,9 @@ const {
 } = require('../../../src/lib/error')
 
 module.exports = class AuthUseCase {
-  constructor(findUserByEmailRepository) {
+  constructor(findUserByEmailRepository, encrypter) {
     this.findUserByEmailRepository = findUserByEmailRepository
+    this.encrypter = encrypter
   }
 
   async auth({ email, senha }) {
@@ -31,6 +32,10 @@ module.exports = class AuthUseCase {
       return null
     }
 
-    return null
+    const isValid = await this.encrypter.compare(senha, user.senha)
+
+    if (!isValid) {
+      return null
+    }
   }
 }
