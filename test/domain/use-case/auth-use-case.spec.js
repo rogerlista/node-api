@@ -1,4 +1,7 @@
-const { ParametroObrigatorioError } = require('../../../src/lib/error')
+const {
+  ParametroInvalidoError,
+  ParametroObrigatorioError,
+} = require('../../../src/lib/error')
 
 class AuthUseCase {
   constructor(findUserByEmailRepository) {
@@ -16,6 +19,10 @@ class AuthUseCase {
 
     if (!this.findUserByEmailRepository) {
       throw new ParametroObrigatorioError('Find User By Email Repository')
+    }
+
+    if (!this.findUserByEmailRepository.find) {
+      throw new ParametroInvalidoError('Find User By Email Repository')
     }
 
     await this.findUserByEmailRepository.find(email)
@@ -77,6 +84,19 @@ describe('Auth Use Case', () => {
 
     await expect(promise).rejects.toThrow(
       new ParametroObrigatorioError('Find User By Email Repository')
+    )
+  })
+
+  test('deve lançar uma exceção se FindUserByEmailRepository não tiver o método find', async () => {
+    const sut = new AuthUseCase({})
+
+    const promise = sut.auth({
+      email: 'email_valido@mail.com',
+      senha: 'senha_valida',
+    })
+
+    await expect(promise).rejects.toThrow(
+      new ParametroInvalidoError('Find User By Email Repository')
     )
   })
 })
