@@ -37,15 +37,35 @@ const makeEncrypterSpy = () => {
   return encrypterSpy
 }
 
+const makeTokenGenerator = () => {
+  class TokenGeneratorSpy {
+    async generate(userId) {
+      this.userId = userId
+      return this.accessToken
+    }
+  }
+
+  const tokenGenerateSpy = new TokenGeneratorSpy()
+  tokenGenerateSpy.accessToken = 'token_valido'
+
+  return tokenGenerateSpy
+}
+
 const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const encrypterSpy = makeEncrypterSpy()
-  const sut = new AuthUseCase(findUserByEmailRepositorySpy, encrypterSpy)
+  const tokenGenerateSpy = makeTokenGenerator()
+  const sut = new AuthUseCase(
+    findUserByEmailRepositorySpy,
+    encrypterSpy,
+    tokenGenerateSpy
+  )
 
   return {
     sut,
     findUserByEmailRepositorySpy,
     encrypterSpy,
+    tokenGenerateSpy,
   }
 }
 
@@ -150,5 +170,13 @@ describe('Auth Use Case', () => {
     const promise = sut.auth(credenciaisValidas)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('deve chamar TokenGenerator com o ID de credencial válida', async () => {
+    const { sut, findUserByEmailRepositorySpy, tokenGenerateSpy } = makeSut()
+
+    await sut.auth(credenciaisValidas)
+
+    expect(tokenGenerateSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
   })
 })

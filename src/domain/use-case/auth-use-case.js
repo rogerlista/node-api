@@ -4,9 +4,10 @@ const {
 } = require('../../../src/lib/error')
 
 module.exports = class AuthUseCase {
-  constructor(findUserByEmailRepository, encrypter) {
+  constructor(findUserByEmailRepository, encrypter, tokenGenerate) {
     this.findUserByEmailRepository = findUserByEmailRepository
     this.encrypter = encrypter
+    this.tokenGenerate = tokenGenerate
   }
 
   async auth({ email, senha }) {
@@ -37,5 +38,7 @@ module.exports = class AuthUseCase {
     if (!isValid) {
       return null
     }
+
+    await this.tokenGenerate.generate(user.id)
   }
 }
