@@ -1,37 +1,8 @@
+const { AuthUseCase } = require('../../../src/domain/use-case')
 const {
   ParametroInvalidoError,
   ParametroObrigatorioError,
 } = require('../../../src/lib/error')
-
-class AuthUseCase {
-  constructor(findUserByEmailRepository) {
-    this.findUserByEmailRepository = findUserByEmailRepository
-  }
-
-  async auth({ email, senha }) {
-    if (!email) {
-      throw new ParametroObrigatorioError('E-mail')
-    }
-
-    if (!senha) {
-      throw new ParametroObrigatorioError('Senha')
-    }
-
-    if (!this.findUserByEmailRepository) {
-      throw new ParametroObrigatorioError('Find User By Email Repository')
-    }
-
-    if (!this.findUserByEmailRepository.find) {
-      throw new ParametroInvalidoError('Find User By Email Repository')
-    }
-
-    const user = await this.findUserByEmailRepository.find(email)
-
-    if (!user) {
-      return null
-    }
-  }
-}
 
 const makeSut = () => {
   class FindUserByEmailRepositorySpy {
