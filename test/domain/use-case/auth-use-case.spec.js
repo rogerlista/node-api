@@ -4,14 +4,21 @@ const {
   ParametroObrigatorioError,
 } = require('../../../src/lib/error')
 
-const makeSut = () => {
+const makeFindUserByEmailRepositorySpy = () => {
   class FindUserByEmailRepositorySpy {
     async find(email) {
       this.email = email
+      return this.user
     }
   }
 
   const findUserByEmailRepositorySpy = new FindUserByEmailRepositorySpy()
+
+  return findUserByEmailRepositorySpy
+}
+
+const makeSut = () => {
+  const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const sut = new AuthUseCase(findUserByEmailRepositorySpy)
 
   return {
