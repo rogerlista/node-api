@@ -1,8 +1,5 @@
 const { AuthUseCase } = require('../../../src/domain/use-case')
-const {
-  ParametroInvalidoError,
-  ParametroObrigatorioError,
-} = require('../../../src/lib/error')
+const { ParametroObrigatorioError } = require('../../../src/lib/error')
 
 const makeFindUserByEmailRepositorySpy = () => {
   class FindUserByEmailRepositorySpy {
@@ -108,9 +105,7 @@ describe('Auth Use Case', () => {
 
     const promise = sut.auth(credenciaisValidas)
 
-    await expect(promise).rejects.toThrow(
-      new ParametroObrigatorioError('Find User By Email Repository')
-    )
+    await expect(promise).rejects.toThrow()
   })
 
   test('deve lançar uma exceção se FindUserByEmailRepository não tiver o método find', async () => {
@@ -118,9 +113,7 @@ describe('Auth Use Case', () => {
 
     const promise = sut.auth(credenciaisValidas)
 
-    await expect(promise).rejects.toThrow(
-      new ParametroInvalidoError('Find User By Email Repository')
-    )
+    await expect(promise).rejects.toThrow()
   })
 
   test('deve retornar null se FindUserByEmailRepository receber um e-mail inexistente', async () => {

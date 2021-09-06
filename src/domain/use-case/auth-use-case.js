@@ -1,7 +1,4 @@
-const {
-  ParametroInvalidoError,
-  ParametroObrigatorioError,
-} = require('../../../src/lib/error')
+const { ParametroObrigatorioError } = require('../../../src/lib/error')
 
 module.exports = class AuthUseCase {
   constructor(findUserByEmailRepository, encrypter, tokenGenerate) {
@@ -17,14 +14,6 @@ module.exports = class AuthUseCase {
 
     if (!senha) {
       throw new ParametroObrigatorioError('Senha')
-    }
-
-    if (!this.findUserByEmailRepository) {
-      throw new ParametroObrigatorioError('Find User By Email Repository')
-    }
-
-    if (!this.findUserByEmailRepository.find) {
-      throw new ParametroInvalidoError('Find User By Email Repository')
     }
 
     const user = await this.findUserByEmailRepository.find(email)
