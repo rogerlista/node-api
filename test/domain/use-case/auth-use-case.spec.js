@@ -13,6 +13,7 @@ const makeFindUserByEmailRepositorySpy = () => {
   }
 
   const findUserByEmailRepositorySpy = new FindUserByEmailRepositorySpy()
+  findUserByEmailRepositorySpy.user = { id: 'qualquer_id' }
 
   return findUserByEmailRepositorySpy
 }
@@ -88,6 +89,17 @@ describe('Auth Use Case', () => {
     const accessToken = await sut.auth({
       email: 'email_inexistente@mail.com',
       senha: 'qualquer_senha',
+    })
+
+    expect(accessToken).toBeNull()
+  })
+
+  test('deve retornar null se uma senha inválida for retornada', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.auth({
+      email: 'email_valido@mail.com',
+      senha: 'senha_incorreta',
     })
 
     expect(accessToken).toBeNull()
