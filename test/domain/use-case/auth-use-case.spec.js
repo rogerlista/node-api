@@ -195,4 +195,12 @@ describe('Auth Use Case', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('deve retornar um accessToken se as credenciais forem válidas', async () => {
+    const { sut, tokenGenerateSpy } = makeSut()
+
+    const accessToken = await sut.auth(credenciaisValidas)
+
+    expect(accessToken).toBe(tokenGenerateSpy.accessToken)
+  })
 })
