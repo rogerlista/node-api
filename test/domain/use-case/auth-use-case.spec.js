@@ -14,6 +14,10 @@ class AuthUseCase {
       throw new ParametroObrigatorioError('Senha')
     }
 
+    if (!this.findUserByEmailRepository) {
+      throw new ParametroObrigatorioError('Find User By Email Repository')
+    }
+
     await this.findUserByEmailRepository.find(email)
   }
 }
@@ -61,5 +65,18 @@ describe('Auth Use Case', () => {
     await sut.auth({ email: 'email_valido@mail.com', senha: 'senha_valida' })
 
     expect(findUserByEmailRepository.email).toBe('email_valido@mail.com')
+  })
+
+  test('deve lançar uma exceção se FindUserByEmailRepository não for passado', async () => {
+    const sut = new AuthUseCase()
+
+    const promise = sut.auth({
+      email: 'email_valido@mail.com',
+      senha: 'senha_valida',
+    })
+
+    await expect(promise).rejects.toThrow(
+      new ParametroObrigatorioError('Find User By Email Repository')
+    )
   })
 })
