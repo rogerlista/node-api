@@ -35,7 +35,7 @@ class AuthUseCase {
 
 const makeSut = () => {
   class FindUserByEmailRepositorySpy {
-    find(email) {
+    async find(email) {
       this.email = email
     }
   }
