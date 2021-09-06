@@ -179,4 +179,15 @@ describe('Auth Use Case', () => {
 
     expect(tokenGenerateSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
   })
+
+  test('deve lançar uma exceção se TokenGenerate não for passado', async () => {
+    const sut = new AuthUseCase(
+      makeFindUserByEmailRepositorySpy(),
+      makeEncrypterSpy()
+    )
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
