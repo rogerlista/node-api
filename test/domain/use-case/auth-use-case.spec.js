@@ -34,18 +34,18 @@ class AuthUseCase {
 }
 
 const makeSut = () => {
-  class FindUserByEmailRepository {
+  class FindUserByEmailRepositorySpy {
     find(email) {
       this.email = email
     }
   }
 
-  const findUserByEmailRepository = new FindUserByEmailRepository()
-  const sut = new AuthUseCase(findUserByEmailRepository)
+  const findUserByEmailRepositorySpy = new FindUserByEmailRepositorySpy()
+  const sut = new AuthUseCase(findUserByEmailRepositorySpy)
 
   return {
     sut,
-    findUserByEmailRepository,
+    findUserByEmailRepositorySpy,
   }
 }
 
@@ -76,11 +76,11 @@ describe('Auth Use Case', () => {
   })
 
   test('deve chamar FindUserByEmailRepository com um e-mail correto', async () => {
-    const { sut, findUserByEmailRepository } = makeSut()
+    const { sut, findUserByEmailRepositorySpy } = makeSut()
 
     await sut.auth(credenciaisValidas)
 
-    expect(findUserByEmailRepository.email).toBe('email_valido@mail.com')
+    expect(findUserByEmailRepositorySpy.email).toBe('email_valido@mail.com')
   })
 
   test('deve lançar uma exceção se FindUserByEmailRepository não for passado', async () => {
