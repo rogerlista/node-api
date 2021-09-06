@@ -128,7 +128,7 @@ describe('Auth Use Case', () => {
     expect(accessToken).toBeNull()
   })
 
-  test('deve retornar null se uma senha inválida for retornada', async () => {
+  test('deve retornar null se uma senha inválida for informada', async () => {
     const { sut, encrypterSpy } = makeSut()
     encrypterSpy.isValid = false
 
