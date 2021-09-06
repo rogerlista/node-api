@@ -143,4 +143,12 @@ describe('Auth Use Case', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('deve lançar uma exceção se Encrypter não tiver o método compare', async () => {
+    const sut = new AuthUseCase(makeFindUserByEmailRepositorySpy(), {})
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
