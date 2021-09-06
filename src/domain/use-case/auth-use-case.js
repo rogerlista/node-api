@@ -17,12 +17,7 @@ module.exports = class AuthUseCase {
     }
 
     const user = await this.findUserByEmailRepository.find(email)
-
-    if (!user) {
-      return null
-    }
-
-    const isValid = await this.encrypter.compare(senha, user.senha)
+    const isValid = user && (await this.encrypter.compare(senha, user.senha))
 
     if (!isValid) {
       return null
