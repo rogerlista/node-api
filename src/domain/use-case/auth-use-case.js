@@ -3,12 +3,12 @@ const { ParametroObrigatorioError } = require('../../../src/lib/error')
 module.exports = class AuthUseCase {
   constructor({
     findUserByEmailRepository,
-    encrypter,
+    encryption,
     tokenGenerator,
     updateAccessTokenRepository,
   } = {}) {
     this.findUserByEmailRepository = findUserByEmailRepository
-    this.encrypter = encrypter
+    this.encryption = encryption
     this.tokenGenerator = tokenGenerator
     this.updateAccessTokenRepository = updateAccessTokenRepository
   }
@@ -23,7 +23,7 @@ module.exports = class AuthUseCase {
     }
 
     const user = await this.findUserByEmailRepository.find(email)
-    const isValid = user && (await this.encrypter.compare(senha, user.senha))
+    const isValid = user && (await this.encryption.compare(senha, user.senha))
 
     if (!isValid) {
       return null

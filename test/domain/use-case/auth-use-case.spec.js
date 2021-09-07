@@ -49,8 +49,8 @@ const makeUpdateAccessTokenRepositoryWithError = () => {
   return new UpdateAccessTokenRepositorySpy()
 }
 
-const makeEncrypterSpy = () => {
-  class EncrypterSpy {
+const makeEncryptionSpy = () => {
+  class EncryptionSpy {
     async compare(senha, hashedSenha) {
       this.senha = senha
       this.hashedSenha = hashedSenha
@@ -59,20 +59,20 @@ const makeEncrypterSpy = () => {
     }
   }
 
-  const encrypterSpy = new EncrypterSpy()
-  encrypterSpy.isValid = true
+  const encryptionSpy = new EncryptionSpy()
+  encryptionSpy.isValid = true
 
-  return encrypterSpy
+  return encryptionSpy
 }
 
-const makeEncrypterWithError = () => {
-  class EncrypterSpy {
+const makeEncryptionWithError = () => {
+  class EncryptionSpy {
     async compare() {
       throw new Error()
     }
   }
 
-  return new EncrypterSpy()
+  return new EncryptionSpy()
 }
 
 const makeTokenGeneratorSpy = () => {
@@ -101,12 +101,12 @@ const makeTokenGeneratorWithError = () => {
 
 const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
-  const encrypterSpy = makeEncrypterSpy()
+  const encryptionSpy = makeEncryptionSpy()
   const tokenGeneratorSpy = makeTokenGeneratorSpy()
   const updateAccessTokenRepositorySpy = makeUpdateAccessTokenRepositorySpy()
   const sut = new AuthUseCase({
     findUserByEmailRepository: findUserByEmailRepositorySpy,
-    encrypter: encrypterSpy,
+    encryption: encryptionSpy,
     tokenGenerator: tokenGeneratorSpy,
     updateAccessTokenRepository: updateAccessTokenRepositorySpy,
   })
@@ -114,7 +114,7 @@ const makeSut = () => {
   return {
     sut,
     findUserByEmailRepositorySpy,
-    encrypterSpy,
+    encryptionSpy,
     tokenGeneratorSpy,
     updateAccessTokenRepositorySpy,
   }
@@ -175,8 +175,8 @@ describe('Auth Use Case', () => {
   })
 
   test('deve retornar null se uma senha inválida for informada', async () => {
-    const { sut, encrypterSpy } = makeSut()
-    encrypterSpy.isValid = false
+    const { sut, encryptionSpy } = makeSut()
+    encryptionSpy.isValid = false
 
     const accessToken = await sut.auth({
       email: 'email_valido@mail.com',
@@ -186,13 +186,13 @@ describe('Auth Use Case', () => {
     expect(accessToken).toBeNull()
   })
 
-  test('deve chamar Encrypter com os valores corretos', async () => {
-    const { sut, encrypterSpy, findUserByEmailRepositorySpy } = makeSut()
+  test('deve chamar Encryption com os valores corretos', async () => {
+    const { sut, encryptionSpy, findUserByEmailRepositorySpy } = makeSut()
 
     await sut.auth(credenciaisValidas)
 
-    expect(encrypterSpy.senha).toBe(credenciaisValidas.senha)
-    expect(encrypterSpy.hashedSenha).toBe(
+    expect(encryptionSpy.senha).toBe(credenciaisValidas.senha)
+    expect(encryptionSpy.hashedSenha).toBe(
       findUserByEmailRepositorySpy.user.senha
     )
   })
@@ -232,7 +232,7 @@ describe('Auth Use Case', () => {
   test('deve lançar uma exceção se alguma das dependências forem inválidas', async () => {
     const invalid = {}
     const findUserByEmailRepository = makeFindUserByEmailRepositorySpy()
-    const encrypter = makeEncrypterSpy()
+    const encryption = makeEncryptionSpy()
     const tokenGenerator = makeTokenGeneratorSpy()
     const updateAccessTokenRepository = makeUpdateAccessTokenRepositorySpy()
     const suts = [].concat(
@@ -240,49 +240,49 @@ describe('Auth Use Case', () => {
       new AuthUseCase({}),
       new AuthUseCase({
         findUserByEmailRepository: null,
-        encrypter,
+        encryption,
         tokenGenerator,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository: invalid,
-        encrypter,
+        encryption,
         tokenGenerator,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter: null,
+        encryption: null,
         tokenGenerator,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter: invalid,
+        encryption: invalid,
         tokenGenerator,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter,
+        encryption,
         tokenGenerator: null,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter,
+        encryption,
         tokenGenerator: invalid,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter,
+        encryption,
         tokenGenerator,
         updateAccessTokenRepository: null,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter,
+        encryption,
         tokenGenerator,
         updateAccessTokenRepository: invalid,
       })
@@ -296,31 +296,31 @@ describe('Auth Use Case', () => {
 
   test('deve repassar a exceção se qualquer dependência lançar uma exceção', async () => {
     const findUserByEmailRepository = makeFindUserByEmailRepositorySpy()
-    const encrypter = makeEncrypterSpy()
+    const encryption = makeEncryptionSpy()
     const tokenGenerator = makeTokenGeneratorSpy()
     const updateAccessTokenRepository = makeUpdateAccessTokenRepositorySpy()
     const suts = [].concat(
       new AuthUseCase({
         findUserByEmailRepository: makeFindUserByEmailRepositoryWithError(),
-        encrypter,
+        encryption,
         tokenGenerator,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter: makeEncrypterWithError(),
+        encryption: makeEncryptionWithError(),
         tokenGenerator,
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter,
+        encryption,
         tokenGenerator: makeTokenGeneratorWithError(),
         updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository,
-        encrypter,
+        encryption,
         tokenGenerator,
         updateAccessTokenRepository: makeUpdateAccessTokenRepositoryWithError(),
       })
