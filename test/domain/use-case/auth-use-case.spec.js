@@ -29,24 +29,24 @@ const makeFindUserByEmailRepositoryWithError = () => {
 }
 
 const makeUpdateAccessTokenRepositorySpy = () => {
-  class UpdateAccessTokenSpy {
+  class UpdateAccessTokenRepositorySpy {
     async update(userId, accessToken) {
       this.userId = userId
       this.accessToken = accessToken
     }
   }
 
-  return new UpdateAccessTokenSpy()
+  return new UpdateAccessTokenRepositorySpy()
 }
 
 const makeUpdateAccessTokenRepositoryWithError = () => {
-  class UpdateAccessTokenSpy {
+  class UpdateAccessTokenRepositorySpy {
     async update() {
       throw new Error()
     }
   }
 
-  return new UpdateAccessTokenSpy()
+  return new UpdateAccessTokenRepositorySpy()
 }
 
 const makeEncrypterSpy = () => {
