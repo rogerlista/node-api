@@ -230,7 +230,7 @@ describe('Auth Use Case', () => {
   })
 
   test('deve lançar uma exceção se alguma das dependências forem inválidas', async () => {
-    const invalid = null
+    const invalid = {}
     const suts = [].concat(
       new AuthUseCase(),
       new AuthUseCase({}),
