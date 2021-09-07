@@ -82,11 +82,11 @@ const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const encrypterSpy = makeEncrypterSpy()
   const tokenGeneratorSpy = makeTokenGenerator()
-  const sut = new AuthUseCase(
-    findUserByEmailRepositorySpy,
-    encrypterSpy,
-    tokenGeneratorSpy
-  )
+  const sut = new AuthUseCase({
+    findUserByEmailRepository: findUserByEmailRepositorySpy,
+    encrypter: encrypterSpy,
+    tokenGenerator: tokenGeneratorSpy,
+  })
 
   return {
     sut,
@@ -131,7 +131,7 @@ describe('Auth Use Case', () => {
   })
 
   test('deve lançar uma exceção se FindUserByEmailRepository não for passado', async () => {
-    const sut = new AuthUseCase()
+    const sut = new AuthUseCase({})
 
     const promise = sut.auth(credenciaisValidas)
 
