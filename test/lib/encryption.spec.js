@@ -8,6 +8,10 @@ class Encryption {
       throw new ParametroObrigatorioError('Senha')
     }
 
+    if (!hash) {
+      throw new ParametroObrigatorioError('Hash')
+    }
+
     const isValid = await bcrypt.compare(valor, hash)
     return isValid
   }
@@ -52,5 +56,13 @@ describe('Encryption', () => {
     await expect(promise).rejects.toThrow(
       new ParametroObrigatorioError('Senha')
     )
+  })
+
+  test('deve lançar uma exceção se o hash não for informado', async () => {
+    const sut = makeSut()
+
+    const promise = sut.compare('qualquer_valor')
+
+    await expect(promise).rejects.toThrow(new ParametroObrigatorioError('Hash'))
   })
 })
