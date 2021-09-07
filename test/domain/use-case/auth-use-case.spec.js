@@ -18,6 +18,16 @@ const makeFindUserByEmailRepositorySpy = () => {
   return findUserByEmailRepositorySpy
 }
 
+const makeFindUserByEmailRepositoryWithError = () => {
+  class FindUserByEmailRepositorySpy {
+    async find() {
+      throw new Error()
+    }
+  }
+
+  return new FindUserByEmailRepositorySpy()
+}
+
 const makeEncrypterSpy = () => {
   class EncrypterSpy {
     async compare(senha, hashedSenha) {
@@ -116,9 +126,15 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test.todo(
-    'deve lançar um exceção se FindUserByEmailRepository lançar uma exceção'
-  )
+  test('deve lançar um exceção se FindUserByEmailRepository lançar uma exceção', async () => {
+    const findUserByEmailRepositorySpy =
+      makeFindUserByEmailRepositoryWithError()
+    const sut = new AuthUseCase(findUserByEmailRepositorySpy)
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 
   test('deve retornar null se FindUserByEmailRepository receber um e-mail inexistente', async () => {
     const { sut, findUserByEmailRepositorySpy } = makeSut()
