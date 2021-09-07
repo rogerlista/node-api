@@ -40,7 +40,7 @@ describe('Encryption', () => {
     const promise = sut.compare()
 
     await expect(promise).rejects.toThrow(
-      new ParametroObrigatorioError('Senha')
+      new ParametroObrigatorioError('Value')
     )
   })
 
