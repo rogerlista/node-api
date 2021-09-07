@@ -7,9 +7,13 @@ class Encryption {
   }
 }
 
+const makeSut = () => {
+  return new Encryption()
+}
+
 describe('Encryption', () => {
   test('deve retornar true se Encryption retornar true', async () => {
-    const sut = new Encryption()
+    const sut = makeSut()
 
     const isValid = await sut.compare('qualquer_valor', 'hash')
 
@@ -17,7 +21,7 @@ describe('Encryption', () => {
   })
 
   test('deve retornar false se Encryption retornar false', async () => {
-    const sut = new Encryption()
+    const sut = makeSut()
     bcrypt.isValid = false
 
     const isValid = await sut.compare('qualquer_valor_invalido', 'hash')
