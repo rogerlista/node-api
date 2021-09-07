@@ -1,21 +1,7 @@
 const bcrypt = require('bcrypt')
 
+const { Encryption } = require('../../src/lib')
 const { ParametroObrigatorioError } = require('../../src/lib/error')
-
-class Encryption {
-  async compare(valor, hash) {
-    if (!valor) {
-      throw new ParametroObrigatorioError('Senha')
-    }
-
-    if (!hash) {
-      throw new ParametroObrigatorioError('Hash')
-    }
-
-    const isValid = await bcrypt.compare(valor, hash)
-    return isValid
-  }
-}
 
 const makeSut = () => {
   return new Encryption()
