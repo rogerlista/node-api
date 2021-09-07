@@ -235,8 +235,20 @@ describe('Auth Use Case', () => {
       new AuthUseCase(),
       new AuthUseCase({}),
       new AuthUseCase({
+        findUserByEmailRepository: null,
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
         findUserByEmailRepository: invalid,
         encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: null,
         tokenGenerator: makeTokenGeneratorSpy(),
         updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
       }),
@@ -249,8 +261,20 @@ describe('Auth Use Case', () => {
       new AuthUseCase({
         findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
         encrypter: makeEncrypterSpy(),
+        tokenGenerator: null,
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterSpy(),
         tokenGenerator: invalid,
         updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: null,
       }),
       new AuthUseCase({
         findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
