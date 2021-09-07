@@ -1,10 +1,16 @@
 const { ParametroObrigatorioError } = require('../../../src/lib/error')
 
 module.exports = class AuthUseCase {
-  constructor({ findUserByEmailRepository, encrypter, tokenGenerator } = {}) {
+  constructor({
+    findUserByEmailRepository,
+    encrypter,
+    tokenGenerator,
+    updateAccessTokenRepository,
+  } = {}) {
     this.findUserByEmailRepository = findUserByEmailRepository
     this.encrypter = encrypter
     this.tokenGenerator = tokenGenerator
+    this.updateAccessTokenRepository = updateAccessTokenRepository
   }
 
   async auth({ email, senha }) {
@@ -24,6 +30,7 @@ module.exports = class AuthUseCase {
     }
 
     const accessToken = await this.tokenGenerator.generate(user.id)
+    await this.updateAccessTokenRepository.update(user.id, accessToken)
 
     return accessToken
   }

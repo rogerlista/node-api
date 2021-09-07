@@ -28,6 +28,17 @@ const makeFindUserByEmailRepositoryWithError = () => {
   return new FindUserByEmailRepositorySpy()
 }
 
+const makeUpdateAccessTokenRepositorySpy = () => {
+  class UpdateAccessTokenSpy {
+    async update(userId, accessToken) {
+      this.userId = userId
+      this.accessToken = accessToken
+    }
+  }
+
+  return new UpdateAccessTokenSpy()
+}
+
 const makeEncrypterSpy = () => {
   class EncrypterSpy {
     async compare(senha, hashedSenha) {
@@ -82,10 +93,12 @@ const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const encrypterSpy = makeEncrypterSpy()
   const tokenGeneratorSpy = makeTokenGenerator()
+  const updateAccessTokenRepositorySpy = makeUpdateAccessTokenRepositorySpy()
   const sut = new AuthUseCase({
     findUserByEmailRepository: findUserByEmailRepositorySpy,
     encrypter: encrypterSpy,
     tokenGenerator: tokenGeneratorSpy,
+    updateAccessTokenRepository: updateAccessTokenRepositorySpy,
   })
 
   return {
@@ -93,6 +106,7 @@ const makeSut = () => {
     findUserByEmailRepositorySpy,
     encrypterSpy,
     tokenGeneratorSpy,
+    updateAccessTokenRepositorySpy,
   }
 }
 
@@ -286,5 +300,20 @@ describe('Auth Use Case', () => {
 
     expect(accessToken).toBe(tokenGeneratorSpy.accessToken)
     expect(accessToken).toBeTruthy()
+  })
+
+  test('deve chamar UpdateAccessTokenRepository com os valores corretos', async () => {
+    const {
+      sut,
+      findUserByEmailRepositorySpy,
+      updateAccessTokenRepositorySpy,
+    } = makeSut()
+
+    const accessToken = await sut.auth(credenciaisValidas)
+
+    expect(updateAccessTokenRepositorySpy.userId).toBe(
+      findUserByEmailRepositorySpy.user.id
+    )
+    expect(updateAccessTokenRepositorySpy.accessToken).toBe(accessToken)
   })
 })
