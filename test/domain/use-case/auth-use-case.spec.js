@@ -39,6 +39,16 @@ const makeUpdateAccessTokenRepositorySpy = () => {
   return new UpdateAccessTokenSpy()
 }
 
+const makeUpdateAccessTokenRepositoryWithError = () => {
+  class UpdateAccessTokenSpy {
+    async update() {
+      throw new Error()
+    }
+  }
+
+  return new UpdateAccessTokenSpy()
+}
+
 const makeEncrypterSpy = () => {
   class EncrypterSpy {
     async compare(senha, hashedSenha) {
@@ -280,8 +290,44 @@ describe('Auth Use Case', () => {
       new AuthUseCase({
         findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
         encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy,
+        tokenGenerator: makeTokenGeneratorSpy(),
         updateAccessTokenRepository: invalid,
+      })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.auth(credenciaisValidas)
+      await expect(promise).rejects.toThrow()
+    }
+  })
+
+  test('deve repassar a exceção se qualquer dependência lançar uma exceção', async () => {
+    const suts = [].concat(
+      new AuthUseCase(),
+      new AuthUseCase({}),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositoryWithError(),
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterWithError(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorWithError(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositoryWithError(),
       })
     )
 
