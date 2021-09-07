@@ -1,7 +1,13 @@
 const bcrypt = require('bcrypt')
 
+const { ParametroObrigatorioError } = require('../../src/lib/error')
+
 class Encryption {
   async compare(valor, hash) {
+    if (!valor) {
+      throw new ParametroObrigatorioError('Senha')
+    }
+
     const isValid = await bcrypt.compare(valor, hash)
     return isValid
   }
@@ -36,5 +42,15 @@ describe('Encryption', () => {
 
     expect(bcrypt.data).toBe('qualquer_valor')
     expect(bcrypt.hash).toBe('qualquer_hash')
+  })
+
+  test('deve lançar uma exceção se o valor não for informado', async () => {
+    const sut = makeSut()
+
+    const promise = sut.compare()
+
+    await expect(promise).rejects.toThrow(
+      new ParametroObrigatorioError('Senha')
+    )
   })
 })
