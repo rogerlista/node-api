@@ -116,6 +116,10 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test.todo(
+    'deve lançar um exceção se FindUserByEmailRepository lançar uma exceção'
+  )
+
   test('deve retornar null se FindUserByEmailRepository receber um e-mail inexistente', async () => {
     const { sut, findUserByEmailRepositorySpy } = makeSut()
     findUserByEmailRepositorySpy.user = null
@@ -167,6 +171,8 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test.todo('deve lançar um exceção se Encrypter lançar uma exceção')
+
   test('deve chamar TokenGenerator com o ID de credencial válida', async () => {
     const { sut, findUserByEmailRepositorySpy, tokenGeneratorSpy } = makeSut()
 
@@ -197,6 +203,8 @@ describe('Auth Use Case', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test.todo('deve lançar um exceção se TokenGenerator lançar uma exceção')
 
   test('deve retornar um accessToken se as credenciais forem válidas', async () => {
     const { sut, tokenGeneratorSpy } = makeSut()
