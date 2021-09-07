@@ -44,6 +44,16 @@ const makeEncrypterSpy = () => {
   return encrypterSpy
 }
 
+const makeEncrypterWithError = () => {
+  class EncrypterSpy {
+    async compare() {
+      throw new Error()
+    }
+  }
+
+  return new EncrypterSpy()
+}
+
 const makeTokenGenerator = () => {
   class TokenGeneratorSpy {
     async generate(userId) {
@@ -187,7 +197,17 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test.todo('deve lançar um exceção se Encrypter lançar uma exceção')
+  test('deve lançar um exceção se Encrypter lançar uma exceção', async () => {
+    const encrypterSpy = makeEncrypterWithError()
+    const sut = new AuthUseCase(
+      makeFindUserByEmailRepositorySpy(),
+      encrypterSpy
+    )
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 
   test('deve chamar TokenGenerator com o ID de credencial válida', async () => {
     const { sut, findUserByEmailRepositorySpy, tokenGeneratorSpy } = makeSut()
