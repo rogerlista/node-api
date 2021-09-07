@@ -68,6 +68,16 @@ const makeTokenGenerator = () => {
   return tokenGeneratorSpy
 }
 
+const makeTokenGeneratorWithError = () => {
+  class TokenGeneratorSpy {
+    async generate() {
+      throw new Error()
+    }
+  }
+
+  return new TokenGeneratorSpy()
+}
+
 const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const encrypterSpy = makeEncrypterSpy()
@@ -240,7 +250,18 @@ describe('Auth Use Case', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test.todo('deve lançar um exceção se TokenGenerator lançar uma exceção')
+  test('deve lançar um exceção se TokenGenerator lançar uma exceção', async () => {
+    const tokenGeneratorSpy = makeTokenGeneratorWithError()
+    const sut = new AuthUseCase(
+      makeFindUserByEmailRepositorySpy(),
+      makeEncrypterSpy(),
+      tokenGeneratorSpy
+    )
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
 
   test('deve retornar um accessToken se as credenciais forem válidas', async () => {
     const { sut, tokenGeneratorSpy } = makeSut()
