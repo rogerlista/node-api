@@ -316,4 +316,41 @@ describe('Auth Use Case', () => {
     )
     expect(updateAccessTokenRepositorySpy.accessToken).toBe(accessToken)
   })
+
+  test('deve lançar uma exceção se alguma das dependências forem inválidas', async () => {
+    const invalid = null
+    const suts = [].concat(
+      new AuthUseCase(),
+      new AuthUseCase({}),
+      new AuthUseCase({
+        findUserByEmailRepository: invalid,
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: invalid,
+        tokenGenerator: makeTokenGeneratorSpy(),
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: invalid,
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+      }),
+      new AuthUseCase({
+        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        encrypter: makeEncrypterSpy(),
+        tokenGenerator: makeTokenGeneratorSpy,
+        updateAccessTokenRepository: invalid,
+      })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.auth(credenciaisValidas)
+      await expect(promise).rejects.toThrow()
+    }
+  })
 })
