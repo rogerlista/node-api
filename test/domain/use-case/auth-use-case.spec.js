@@ -231,55 +231,59 @@ describe('Auth Use Case', () => {
 
   test('deve lançar uma exceção se alguma das dependências forem inválidas', async () => {
     const invalid = {}
+    const findUserByEmailRepository = makeFindUserByEmailRepositorySpy()
+    const encrypter = makeEncrypterSpy()
+    const tokenGenerator = makeTokenGeneratorSpy()
+    const updateAccessTokenRepository = makeUpdateAccessTokenRepositorySpy()
     const suts = [].concat(
       new AuthUseCase(),
       new AuthUseCase({}),
       new AuthUseCase({
         findUserByEmailRepository: null,
-        encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        encrypter,
+        tokenGenerator,
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
         findUserByEmailRepository: invalid,
-        encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        encrypter,
+        tokenGenerator,
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        findUserByEmailRepository,
         encrypter: null,
-        tokenGenerator: makeTokenGeneratorSpy(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        tokenGenerator,
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        findUserByEmailRepository,
         encrypter: invalid,
-        tokenGenerator: makeTokenGeneratorSpy(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        tokenGenerator,
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
-        encrypter: makeEncrypterSpy(),
+        findUserByEmailRepository,
+        encrypter,
         tokenGenerator: null,
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
-        encrypter: makeEncrypterSpy(),
+        findUserByEmailRepository,
+        encrypter,
         tokenGenerator: invalid,
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
-        encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy(),
+        findUserByEmailRepository,
+        encrypter,
+        tokenGenerator,
         updateAccessTokenRepository: null,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
-        encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy(),
+        findUserByEmailRepository,
+        encrypter,
+        tokenGenerator,
         updateAccessTokenRepository: invalid,
       })
     )
@@ -291,29 +295,33 @@ describe('Auth Use Case', () => {
   })
 
   test('deve repassar a exceção se qualquer dependência lançar uma exceção', async () => {
+    const findUserByEmailRepository = makeFindUserByEmailRepositorySpy()
+    const encrypter = makeEncrypterSpy()
+    const tokenGenerator = makeTokenGeneratorSpy()
+    const updateAccessTokenRepository = makeUpdateAccessTokenRepositorySpy()
     const suts = [].concat(
       new AuthUseCase({
         findUserByEmailRepository: makeFindUserByEmailRepositoryWithError(),
-        encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        encrypter,
+        tokenGenerator,
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
+        findUserByEmailRepository,
         encrypter: makeEncrypterWithError(),
-        tokenGenerator: makeTokenGeneratorSpy(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        tokenGenerator,
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
-        encrypter: makeEncrypterSpy(),
+        findUserByEmailRepository,
+        encrypter,
         tokenGenerator: makeTokenGeneratorWithError(),
-        updateAccessTokenRepository: makeUpdateAccessTokenRepositorySpy(),
+        updateAccessTokenRepository,
       }),
       new AuthUseCase({
-        findUserByEmailRepository: makeFindUserByEmailRepositorySpy(),
-        encrypter: makeEncrypterSpy(),
-        tokenGenerator: makeTokenGeneratorSpy(),
+        findUserByEmailRepository,
+        encrypter,
+        tokenGenerator,
         updateAccessTokenRepository: makeUpdateAccessTokenRepositoryWithError(),
       })
     )
