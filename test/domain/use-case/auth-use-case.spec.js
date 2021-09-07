@@ -65,7 +65,7 @@ const makeEncrypterWithError = () => {
   return new EncrypterSpy()
 }
 
-const makeTokenGenerator = () => {
+const makeTokenGeneratorSpy = () => {
   class TokenGeneratorSpy {
     async generate(userId) {
       this.userId = userId
@@ -92,7 +92,7 @@ const makeTokenGeneratorWithError = () => {
 const makeSut = () => {
   const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorySpy()
   const encrypterSpy = makeEncrypterSpy()
-  const tokenGeneratorSpy = makeTokenGenerator()
+  const tokenGeneratorSpy = makeTokenGeneratorSpy()
   const updateAccessTokenRepositorySpy = makeUpdateAccessTokenRepositorySpy()
   const sut = new AuthUseCase({
     findUserByEmailRepository: findUserByEmailRepositorySpy,
