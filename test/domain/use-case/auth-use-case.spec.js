@@ -162,16 +162,6 @@ describe('Auth Use Case', () => {
     expect(findUserByEmailRepositorySpy.email).toBe('email_valido@mail.com')
   })
 
-  test('deve lançar um exceção se FindUserByEmailRepository lançar uma exceção', async () => {
-    const findUserByEmailRepositorySpy =
-      makeFindUserByEmailRepositoryWithError()
-    const sut = new AuthUseCase(findUserByEmailRepositorySpy)
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
   test('deve retornar null se FindUserByEmailRepository receber um e-mail inexistente', async () => {
     const { sut, findUserByEmailRepositorySpy } = makeSut()
     findUserByEmailRepositorySpy.user = null
@@ -207,37 +197,12 @@ describe('Auth Use Case', () => {
     )
   })
 
-  test('deve lançar um exceção se Encrypter lançar uma exceção', async () => {
-    const encrypterSpy = makeEncrypterWithError()
-    const sut = new AuthUseCase(
-      makeFindUserByEmailRepositorySpy(),
-      encrypterSpy
-    )
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
   test('deve chamar TokenGenerator com o ID de credencial válida', async () => {
     const { sut, findUserByEmailRepositorySpy, tokenGeneratorSpy } = makeSut()
 
     await sut.auth(credenciaisValidas)
 
     expect(tokenGeneratorSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
-  })
-
-  test('deve lançar um exceção se TokenGenerator lançar uma exceção', async () => {
-    const tokenGeneratorSpy = makeTokenGeneratorWithError()
-    const sut = new AuthUseCase(
-      makeFindUserByEmailRepositorySpy(),
-      makeEncrypterSpy(),
-      tokenGeneratorSpy
-    )
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
   })
 
   test('deve retornar um accessToken se as credenciais forem válidas', async () => {
@@ -303,8 +268,6 @@ describe('Auth Use Case', () => {
 
   test('deve repassar a exceção se qualquer dependência lançar uma exceção', async () => {
     const suts = [].concat(
-      new AuthUseCase(),
-      new AuthUseCase({}),
       new AuthUseCase({
         findUserByEmailRepository: makeFindUserByEmailRepositoryWithError(),
         encrypter: makeEncrypterSpy(),
