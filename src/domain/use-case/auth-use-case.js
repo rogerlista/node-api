@@ -1,7 +1,7 @@
 const { ParametroObrigatorioError } = require('../../../src/lib/error')
 
 module.exports = class AuthUseCase {
-  constructor({ findUserByEmailRepository, encrypter, tokenGenerator }) {
+  constructor({ findUserByEmailRepository, encrypter, tokenGenerator } = {}) {
     this.findUserByEmailRepository = findUserByEmailRepository
     this.encrypter = encrypter
     this.tokenGenerator = tokenGenerator

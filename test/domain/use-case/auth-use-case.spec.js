@@ -130,6 +130,14 @@ describe('Auth Use Case', () => {
     expect(findUserByEmailRepositorySpy.email).toBe('email_valido@mail.com')
   })
 
+  test('deve lançar uma exceção se AuthUseCase não receber um objeto', async () => {
+    const sut = new AuthUseCase()
+
+    const promise = sut.auth(credenciaisValidas)
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('deve lançar uma exceção se FindUserByEmailRepository não for passado', async () => {
     const sut = new AuthUseCase({})
 
