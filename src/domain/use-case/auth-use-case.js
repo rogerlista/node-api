@@ -7,7 +7,7 @@ module.exports = class AuthUseCase {
     this.tokenGenerator = tokenGenerator
   }
 
-  async auth({ email, senha }) {
+  async auth({ email, senha } = {}) {
     if (!email) {
       throw new ParametroObrigatorioError('E-mail')
     }

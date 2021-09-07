@@ -102,6 +102,14 @@ const credenciaisValidas = {
 }
 
 describe('Auth Use Case', () => {
+  test('deve lançar uma exceção se o método auth não receber um objeto', async () => {
+    const { sut } = makeSut()
+
+    const promise = sut.auth()
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('deve lançar uma exceção se o e-mail não for informado', async () => {
     const { sut } = makeSut()
 
