@@ -152,30 +152,6 @@ describe('Auth Use Case', () => {
     expect(findUserByEmailRepositorySpy.email).toBe('email_valido@mail.com')
   })
 
-  test('deve lançar uma exceção se AuthUseCase não receber um objeto', async () => {
-    const sut = new AuthUseCase()
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
-  test('deve lançar uma exceção se FindUserByEmailRepository não for passado', async () => {
-    const sut = new AuthUseCase({})
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
-  test('deve lançar uma exceção se FindUserByEmailRepository não tiver o método find', async () => {
-    const sut = new AuthUseCase({})
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
   test('deve lançar um exceção se FindUserByEmailRepository lançar uma exceção', async () => {
     const findUserByEmailRepositorySpy =
       makeFindUserByEmailRepositoryWithError()
@@ -221,22 +197,6 @@ describe('Auth Use Case', () => {
     )
   })
 
-  test('deve lançar uma exceção se Encrypter não for passado', async () => {
-    const sut = new AuthUseCase(makeFindUserByEmailRepositorySpy())
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
-  test('deve lançar uma exceção se Encrypter não tiver o método compare', async () => {
-    const sut = new AuthUseCase(makeFindUserByEmailRepositorySpy(), {})
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
   test('deve lançar um exceção se Encrypter lançar uma exceção', async () => {
     const encrypterSpy = makeEncrypterWithError()
     const sut = new AuthUseCase(
@@ -255,29 +215,6 @@ describe('Auth Use Case', () => {
     await sut.auth(credenciaisValidas)
 
     expect(tokenGeneratorSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
-  })
-
-  test('deve lançar uma exceção se TokenGenerator não for passado', async () => {
-    const sut = new AuthUseCase(
-      makeFindUserByEmailRepositorySpy(),
-      makeEncrypterSpy()
-    )
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
-  })
-
-  test('deve lançar uma exceção se TokenGenerator não tiver o método generate', async () => {
-    const sut = new AuthUseCase(
-      makeFindUserByEmailRepositorySpy(),
-      makeEncrypterSpy(),
-      {}
-    )
-
-    const promise = sut.auth(credenciaisValidas)
-
-    await expect(promise).rejects.toThrow()
   })
 
   test('deve lançar um exceção se TokenGenerator lançar uma exceção', async () => {
