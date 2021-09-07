@@ -1,6 +1,7 @@
 const validator = require('validator')
 
 const { EmailValidator } = require('../../../src/lib/validator')
+const { ParametroObrigatorioError } = require('../../../src/lib/error')
 
 const makeSut = () => {
   return new EmailValidator()
@@ -31,5 +32,11 @@ describe('Email Validator', () => {
     sut.isValid(email)
 
     expect(validator.email).toBe(email)
+  })
+
+  test('deve lançar uma exceção se o e-mail não for informado', () => {
+    const sut = makeSut()
+
+    expect(() => sut.isValid()).toThrow(new ParametroObrigatorioError('E-mail'))
   })
 })
