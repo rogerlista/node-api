@@ -3,18 +3,26 @@ const jwt = require('jsonwebtoken')
 const { ParametroObrigatorioError } = require('../../src/lib/error')
 
 class TokenGenerator {
+  constructor(secret) {
+    this.secret = secret
+  }
+
   async generate(id) {
     if (!id) {
       throw new ParametroObrigatorioError('ID')
     }
 
-    return jwt.sign(id, 'qualquer_string_de_seguranca')
+    if (!this.secret) {
+      throw new ParametroObrigatorioError('Secret')
+    }
+
+    return jwt.sign(id, this.secret)
   }
 }
 
 const makeSut = () => {
   jwt.token = 'qualquer_token'
-  return new TokenGenerator()
+  return new TokenGenerator('qualquer_string_de_seguranca')
 }
 
 describe('Token Generator', () => {
@@ -50,5 +58,15 @@ describe('Token Generator', () => {
     const promise = sut.generate()
 
     await expect(promise).rejects.toThrow(new ParametroObrigatorioError('ID'))
+  })
+
+  test('deve lançar uma exceção se a secret não for informada', async () => {
+    const sut = new TokenGenerator()
+
+    const promise = sut.generate('qualquer_id')
+
+    await expect(promise).rejects.toThrow(
+      new ParametroObrigatorioError('Secret')
+    )
   })
 })
