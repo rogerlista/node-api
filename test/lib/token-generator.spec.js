@@ -1,24 +1,7 @@
 const jwt = require('jsonwebtoken')
 
+const { TokenGenerator } = require('../../src/lib')
 const { ParametroObrigatorioError } = require('../../src/lib/error')
-
-class TokenGenerator {
-  constructor(secret) {
-    this.secret = secret
-  }
-
-  async generate(id) {
-    if (!id) {
-      throw new ParametroObrigatorioError('ID')
-    }
-
-    if (!this.secret) {
-      throw new ParametroObrigatorioError('Secret')
-    }
-
-    return jwt.sign(id, this.secret)
-  }
-}
 
 const makeSut = () => {
   return new TokenGenerator('qualquer_string_de_seguranca')
