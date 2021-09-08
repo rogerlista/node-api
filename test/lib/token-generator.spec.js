@@ -31,7 +31,7 @@ describe('Token Generator', () => {
     await sut.generate('qualquer_id')
 
     expect(jwt.id).toBe('qualquer_id')
-    expect(jwt.secret).toBe('qualquer_string_de_seguranca')
+    expect(jwt.secret).toBe(sut.secret)
   })
 
   test('deve lançar uma exceção se o id não for informado', async () => {
