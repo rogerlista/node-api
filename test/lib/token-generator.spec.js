@@ -7,6 +7,7 @@ class TokenGenerator {
 }
 
 const makeSut = () => {
+  jwt.token = 'qualquer_token'
   return new TokenGenerator()
 }
 
@@ -18,6 +19,14 @@ describe('Token Generator', () => {
     const token = await sut.generate('qualquer_id')
 
     expect(token).toBeNull()
+  })
+
+  test('deve retornar um token se generate retornar um token', async () => {
+    const sut = makeSut()
+
+    const token = await sut.generate('qualquer_id')
+
+    expect(token).toBe('qualquer_token')
   })
 
   test('deve chamar generate com os valores corretos', async () => {
