@@ -1,4 +1,5 @@
 const { FindUserByEmailRepository } = require('../../src/infra')
+const { ParametroObrigatorioError } = require('../../src/lib/error')
 const { Mongo } = require('../../src/lib/infra')
 
 let db
@@ -56,5 +57,13 @@ describe('FindUserByEmailRepository', () => {
     const sut = new FindUserByEmailRepository()
     const promise = sut.find('email_existente@mail.com')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('deve lançar uma exceção se o email não for informado', async () => {
+    const { sut } = makeSut()
+    const promise = sut.find()
+    await expect(promise).rejects.toThrow(
+      new ParametroObrigatorioError('E-mail')
+    )
   })
 })
