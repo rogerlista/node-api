@@ -51,4 +51,10 @@ describe('FindUserByEmailRepository', () => {
       senha: 'senha_hashed',
     })
   })
+
+  test('deve lançar uma exceção se userModel não for informado', async () => {
+    const sut = new FindUserByEmailRepository()
+    const promise = sut.find('email_existente@mail.com')
+    await expect(promise).rejects.toThrow()
+  })
 })
