@@ -1,9 +1,7 @@
-const { MongoClient } = require('mongodb')
-
 const { FindUserByEmailRepository } = require('../../src/infra')
+const { Mongo } = require('../../src/lib/infra')
 
 let db
-let connection
 
 const makeSut = () => {
   const userModel = db.collection('users')
@@ -16,11 +14,8 @@ const makeSut = () => {
 
 describe('FindUserByEmailRepository', () => {
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    db = connection.db()
+    await Mongo.connect(process.env.MONGO_URL)
+    db = await Mongo.getDb()
   })
 
   beforeEach(async () => {
@@ -28,7 +23,7 @@ describe('FindUserByEmailRepository', () => {
   })
 
   afterAll(async () => {
-    await connection.close()
+    await Mongo.disconnect()
   })
 
   test('deve retornar null se o usuário não for encontrado', async () => {
