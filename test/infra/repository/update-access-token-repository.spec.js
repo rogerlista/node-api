@@ -12,6 +12,9 @@ class UpdateAccessTokenRepository {
     if (!_id) {
       throw new ParametroObrigatorioError('ID')
     }
+    if (!accessToken) {
+      throw new ParametroObrigatorioError('Access Token')
+    }
     await this.userModel.updateOne({ _id }, { $set: { accessToken } })
   }
 }
@@ -68,5 +71,13 @@ describe('UpdateAccessTokenRepository', () => {
     const { sut } = makeSut()
     const promise = sut.update()
     await expect(promise).rejects.toThrow(new ParametroObrigatorioError('ID'))
+  })
+
+  test('deve lançar uma exceção se o accessToken não for informado', async () => {
+    const { sut } = makeSut()
+    const promise = sut.update(newUser._id)
+    await expect(promise).rejects.toThrow(
+      new ParametroObrigatorioError('Access Token')
+    )
   })
 })
