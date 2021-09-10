@@ -48,7 +48,7 @@ describe('UpdateAccessTokenRepository', () => {
 
   test('deve lançar uma exceção se userModel não for informado', async () => {
     const sut = new UpdateAccessTokenRepository()
-    const promise = sut.update()
+    const promise = sut.update(newUser._id, 'valid_token')
     await expect(promise).rejects.toThrow()
   })
 
