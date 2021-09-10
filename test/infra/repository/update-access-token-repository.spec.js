@@ -1,3 +1,4 @@
+const { ParametroObrigatorioError } = require('../../../src/lib/error')
 const { Mongo } = require('../../../src/lib/infra')
 
 let db
@@ -8,6 +9,9 @@ class UpdateAccessTokenRepository {
   }
 
   async update(_id, accessToken) {
+    if (!_id) {
+      throw new ParametroObrigatorioError('ID')
+    }
     await this.userModel.updateOne({ _id }, { $set: { accessToken } })
   }
 }
@@ -58,5 +62,11 @@ describe('UpdateAccessTokenRepository', () => {
     const sut = new UpdateAccessTokenRepository()
     const promise = sut.update()
     await expect(promise).rejects.toThrow()
+  })
+
+  test('deve lançar uma exceção se o ID não for informado', async () => {
+    const { sut } = makeSut()
+    const promise = sut.update()
+    await expect(promise).rejects.toThrow(new ParametroObrigatorioError('ID'))
   })
 })
