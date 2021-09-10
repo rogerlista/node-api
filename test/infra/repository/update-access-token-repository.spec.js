@@ -23,13 +23,24 @@ const makeSut = () => {
 }
 
 describe('UpdateAccessTokenRepository', () => {
+  const newUser = {
+    _id: 'qualquer_id',
+    nome: 'qualquer_nome',
+    email: 'email_existente@mail.com',
+    senha: 'senha_hashed',
+    idade: 50,
+    estado: 'qualquer_estado',
+  }
+
   beforeAll(async () => {
     await Mongo.connect(process.env.MONGO_URL)
     db = await Mongo.getDb()
   })
 
   beforeEach(async () => {
-    await db.collection('users').deleteMany()
+    const userModel = await db.collection('users')
+    await userModel.deleteMany()
+    await userModel.insertOne(newUser)
   })
 
   afterAll(async () => {
@@ -38,15 +49,6 @@ describe('UpdateAccessTokenRepository', () => {
 
   test('deve atualizar o usuário com um dado accessToken', async () => {
     const { sut, userModel } = makeSut()
-    const newUser = {
-      _id: 'qualquer_id',
-      nome: 'qualquer_nome',
-      email: 'email_existente@mail.com',
-      senha: 'senha_hashed',
-      idade: 50,
-      estado: 'qualquer_estado',
-    }
-    await userModel.insertOne(newUser)
     await sut.update(newUser._id, 'valid_token')
     const updateUser = await userModel.findOne({ _id: newUser._id })
     expect(updateUser.accessToken).toBe('valid_token')
@@ -54,16 +56,6 @@ describe('UpdateAccessTokenRepository', () => {
 
   test('deve lançar uma exceção se userModel não for informado', async () => {
     const sut = new UpdateAccessTokenRepository()
-    const userModel = db.collection('users')
-    const newUser = {
-      _id: 'qualquer_id',
-      nome: 'qualquer_nome',
-      email: 'email_existente@mail.com',
-      senha: 'senha_hashed',
-      idade: 50,
-      estado: 'qualquer_estado',
-    }
-    await userModel.insertOne(newUser)
     const promise = sut.update()
     await expect(promise).rejects.toThrow()
   })
