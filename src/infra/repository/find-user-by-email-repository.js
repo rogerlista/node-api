@@ -1,4 +1,4 @@
-const { ParametroObrigatorioError } = require('../lib/error')
+const { ParametroObrigatorioError } = require('../../lib/error')
 
 module.exports = class FindUserByEmailRepository {
   constructor(userModel) {

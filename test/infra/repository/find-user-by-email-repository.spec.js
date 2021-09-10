@@ -1,6 +1,6 @@
-const { FindUserByEmailRepository } = require('../../src/infra')
-const { ParametroObrigatorioError } = require('../../src/lib/error')
-const { Mongo } = require('../../src/lib/infra')
+const { FindUserByEmailRepository } = require('../../../src/infra/repository')
+const { ParametroObrigatorioError } = require('../../../src/lib/error')
+const { Mongo } = require('../../../src/lib/infra')
 
 let db
 
