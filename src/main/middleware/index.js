@@ -1,9 +1,9 @@
 const cors = require('./cors')
-const jsonParse = require('./json-parse')
+const jsonParser = require('./json-parser')
 const contentType = require('./content-type')
 
 module.exports = {
   cors,
-  jsonParse,
+  jsonParser,
   contentType,
 }

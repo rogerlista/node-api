@@ -2,7 +2,7 @@ const request = require('supertest')
 
 const app = require('../../../src/main/app')
 
-describe('JSONParse', () => {
+describe('JSONParser', () => {
   test('deve fazer o parse do body como JSON', async () => {
     app.post('/fazer_parse_json', (req, res) => {
       res.send(req.body)
