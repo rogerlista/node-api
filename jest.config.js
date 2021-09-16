@@ -1,5 +1,5 @@
 module.exports = {
-  collectCoverageFrom: ['<rootDir>/src/**/*.js'],
+  collectCoverageFrom: ['<rootDir>/src/**/*.js', '!<rootDir>/src/main/**'],
   coverageDirectory: 'coverage',
   collectCoverage: true,
   coverageProvider: 'v8',
