@@ -1,3 +1,9 @@
-const app = require('./app')
+const { Mongo } = require('../lib/infra')
+const { env } = require('./config')
 
-app.listen(5858, () => console.log('Server Running'))
+Mongo.connect(env.mongoUrl)
+  .then(() => {
+    const app = require('./app')
+    app.listen(5858, () => console.log('Server Running'))
+  })
+  .catch(console.error)
