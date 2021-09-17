@@ -15,7 +15,7 @@ module.exports = {
     await this.connection.close()
   },
 
-  async getDb() {
-    return this.db
+  async getCollection(name) {
+    return this.db.collection(name)
   },
 }

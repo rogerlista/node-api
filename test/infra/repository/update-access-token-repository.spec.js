@@ -2,13 +2,12 @@ const { UpdateAccessTokenRepository } = require('../../../src/infra/repository')
 const { ParametroObrigatorioError } = require('../../../src/lib/error')
 const { Mongo } = require('../../../src/lib/infra')
 
-let db
-
 const makeSut = () => {
   return new UpdateAccessTokenRepository()
 }
 
 describe('UpdateAccessTokenRepository', () => {
+  let userModel
   const newUser = {
     _id: 'qualquer_id',
     nome: 'qualquer_nome',
@@ -20,11 +19,10 @@ describe('UpdateAccessTokenRepository', () => {
 
   beforeAll(async () => {
     await Mongo.connect(process.env.MONGO_URL)
-    db = await Mongo.getDb()
+    userModel = await Mongo.getCollection('users')
   })
 
   beforeEach(async () => {
-    const userModel = await db.collection('users')
     await userModel.deleteMany()
     await userModel.insertOne(newUser)
   })
@@ -36,9 +34,7 @@ describe('UpdateAccessTokenRepository', () => {
   test('deve atualizar o usuário com um dado accessToken', async () => {
     const sut = makeSut()
     await sut.update(newUser._id, 'valid_token')
-    const updateUser = await db
-      .collection('users')
-      .findOne({ _id: newUser._id })
+    const updateUser = await userModel.findOne({ _id: newUser._id })
     expect(updateUser.accessToken).toBe('valid_token')
   })
 

@@ -6,8 +6,8 @@ module.exports = class FindUserByEmailRepository {
     if (!email) {
       throw new ParametroObrigatorioError('E-mail')
     }
-    const db = await Mongo.getDb()
-    return await db.collection('users').findOne(
+    const userModel = await Mongo.getCollection('users')
+    return await userModel.findOne(
       {
         email,
       },

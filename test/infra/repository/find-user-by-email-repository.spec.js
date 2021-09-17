@@ -2,20 +2,20 @@ const { FindUserByEmailRepository } = require('../../../src/infra/repository')
 const { ParametroObrigatorioError } = require('../../../src/lib/error')
 const { Mongo } = require('../../../src/lib/infra')
 
-let db
-
 const makeSut = () => {
   return new FindUserByEmailRepository()
 }
 
 describe('FindUserByEmailRepository', () => {
+  let userModel
+
   beforeAll(async () => {
     await Mongo.connect(process.env.MONGO_URL)
-    db = await Mongo.getDb()
+    userModel = await Mongo.getCollection('users')
   })
 
   beforeEach(async () => {
-    await db.collection('users').deleteMany()
+    await userModel.deleteMany()
   })
 
   afterAll(async () => {
@@ -40,7 +40,7 @@ describe('FindUserByEmailRepository', () => {
       idade: 50,
       estado: 'qualquer_estado',
     }
-    await db.collection('users').insertOne(fakeUser)
+    await userModel.insertOne(fakeUser)
     const user = await sut.find('email_existente@mail.com')
     expect(user).toEqual({
       _id: 'qualquer_id',

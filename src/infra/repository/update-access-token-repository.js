@@ -9,7 +9,7 @@ module.exports = class UpdateAccessTokenRepository {
     if (!accessToken) {
       throw new ParametroObrigatorioError('Access Token')
     }
-    const db = await Mongo.getDb()
-    await db.collection('users').updateOne({ _id }, { $set: { accessToken } })
+    const userModel = await Mongo.getCollection('users')
+    await userModel.updateOne({ _id }, { $set: { accessToken } })
   }
 }
