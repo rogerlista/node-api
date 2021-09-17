@@ -7,6 +7,16 @@ const makeSut = () => {
   return new Encryption()
 }
 
+jest.mock('bcrypt', () => ({
+  isValid: true,
+
+  async compare(data, hash) {
+    this.data = data
+    this.hash = hash
+    return this.isValid
+  },
+}))
+
 describe('Encryption', () => {
   test('deve retornar true se Encryption retornar true', async () => {
     const sut = makeSut()
