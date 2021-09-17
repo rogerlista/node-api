@@ -90,7 +90,9 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('E-mail'))
+    expect(httpResponse.body.error).toBe(
+      new ParametroObrigatorioError('E-mail').message
+    )
   })
 
   test('deve retornar status code 400 se a senha não for informada', async () => {
@@ -104,7 +106,9 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new ParametroObrigatorioError('Senha'))
+    expect(httpResponse.body.error).toBe(
+      new ParametroObrigatorioError('Senha').message
+    )
   })
 
   test('deve retornar status code 500 se httpRequest não for passada', async () => {
@@ -113,7 +117,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route()
 
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body.error).toBe(new ServerError().message)
   })
 
   test('deve retornar status code 500 se httpRequest não conter um body', async () => {
@@ -122,7 +126,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route({})
 
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body.error).toBe(new ServerError().message)
   })
 
   test('deve chamar AuthUseCaseSpy com os parâmetros corretos', async () => {
@@ -147,7 +151,7 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(401)
-    expect(httpResponse.body).toEqual(new UnauthorizedError())
+    expect(httpResponse.body.error).toBe(new UnauthorizedError().message)
   })
 
   test('deve retornar o status code 200 quando as credenciais forem válidas', async () => {
@@ -174,7 +178,9 @@ describe('Login Router', () => {
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new ParametroInvalidoError('E-mail'))
+    expect(httpResponse.body.error).toBe(
+      new ParametroInvalidoError('E-mail').message
+    )
   })
 
   test('deve lançar uma exceção se qualquer uma das dependências forem inválidas', async () => {
@@ -204,7 +210,7 @@ describe('Login Router', () => {
     for (const sut of suts) {
       const httpResponse = await sut.route(httpRequest)
       expect(httpResponse.statusCode).toBe(500)
-      expect(httpResponse.body).toEqual(new ServerError())
+      expect(httpResponse.body.error).toBe(new ServerError().message)
     }
   })
 
@@ -224,7 +230,7 @@ describe('Login Router', () => {
     for (const sut of suts) {
       const httpResponse = await sut.route(httpRequest)
       expect(httpResponse.statusCode).toBe(500)
-      expect(httpResponse.body).toEqual(new ServerError())
+      expect(httpResponse.body.error).toBe(new ServerError().message)
     }
   })
 })
