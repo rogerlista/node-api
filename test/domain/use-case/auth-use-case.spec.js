@@ -202,7 +202,7 @@ describe('Auth Use Case', () => {
 
     await sut.auth(credenciaisValidas)
 
-    expect(tokenGeneratorSpy.userId).toBe(findUserByEmailRepositorySpy.user.id)
+    expect(tokenGeneratorSpy.userId).toBe(findUserByEmailRepositorySpy.user._id)
   })
 
   test('deve retornar um accessToken se as credenciais forem válidas', async () => {
@@ -224,7 +224,7 @@ describe('Auth Use Case', () => {
     const accessToken = await sut.auth(credenciaisValidas)
 
     expect(updateAccessTokenRepositorySpy.userId).toBe(
-      findUserByEmailRepositorySpy.user.id
+      findUserByEmailRepositorySpy.user._id
     )
     expect(updateAccessTokenRepositorySpy.accessToken).toBe(accessToken)
   })

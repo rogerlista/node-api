@@ -1,5 +1,5 @@
-const loginRouter = require('./login-router-composer')
+const LoginRouter = require('./login-router-composer')
 
 module.exports = {
-  loginRouter,
+  LoginRouter,
 }

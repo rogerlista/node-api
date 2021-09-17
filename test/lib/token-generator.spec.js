@@ -10,8 +10,8 @@ const makeSut = () => {
 jest.mock('jsonwebtoken', () => ({
   token: 'qualquer_token',
 
-  sign(id, secret) {
-    this.id = id
+  sign(payload, secret) {
+    this.payload = payload
     this.secret = secret
     return this.token
   },
@@ -40,7 +40,7 @@ describe('Token Generator', () => {
 
     await sut.generate('qualquer_id')
 
-    expect(jwt.id).toBe('qualquer_id')
+    expect(jwt.payload).toEqual({ _id: 'qualquer_id' })
     expect(jwt.secret).toBe(sut.secret)
   })
 

@@ -16,6 +16,6 @@ module.exports = class TokenGenerator {
       throw new ParametroObrigatorioError('Secret')
     }
 
-    return jwt.sign(id, this.secret)
+    return jwt.sign({ _id: id }, this.secret)
   }
 }
