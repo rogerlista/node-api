@@ -5,13 +5,7 @@ const { Mongo } = require('../../../src/lib/infra')
 let db
 
 const makeSut = () => {
-  const userModel = db.collection('users')
-  const sut = new UpdateAccessTokenRepository(userModel)
-
-  return {
-    sut,
-    userModel,
-  }
+  return new UpdateAccessTokenRepository()
 }
 
 describe('UpdateAccessTokenRepository', () => {
@@ -40,26 +34,22 @@ describe('UpdateAccessTokenRepository', () => {
   })
 
   test('deve atualizar o usuário com um dado accessToken', async () => {
-    const { sut, userModel } = makeSut()
+    const sut = makeSut()
     await sut.update(newUser._id, 'valid_token')
-    const updateUser = await userModel.findOne({ _id: newUser._id })
+    const updateUser = await db
+      .collection('users')
+      .findOne({ _id: newUser._id })
     expect(updateUser.accessToken).toBe('valid_token')
   })
 
-  test('deve lançar uma exceção se userModel não for informado', async () => {
-    const sut = new UpdateAccessTokenRepository()
-    const promise = sut.update(newUser._id, 'valid_token')
-    await expect(promise).rejects.toThrow()
-  })
-
   test('deve lançar uma exceção se o ID não for informado', async () => {
-    const { sut } = makeSut()
+    const sut = makeSut()
     const promise = sut.update()
     await expect(promise).rejects.toThrow(new ParametroObrigatorioError('ID'))
   })
 
   test('deve lançar uma exceção se o accessToken não for informado', async () => {
-    const { sut } = makeSut()
+    const sut = makeSut()
     const promise = sut.update(newUser._id)
     await expect(promise).rejects.toThrow(
       new ParametroObrigatorioError('Access Token')

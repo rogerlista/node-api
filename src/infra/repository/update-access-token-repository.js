@@ -1,10 +1,7 @@
+const { Mongo } = require('../../lib/infra')
 const { ParametroObrigatorioError } = require('../../lib/error')
 
 module.exports = class UpdateAccessTokenRepository {
-  constructor(userModel) {
-    this.userModel = userModel
-  }
-
   async update(_id, accessToken) {
     if (!_id) {
       throw new ParametroObrigatorioError('ID')
@@ -12,6 +9,7 @@ module.exports = class UpdateAccessTokenRepository {
     if (!accessToken) {
       throw new ParametroObrigatorioError('Access Token')
     }
-    await this.userModel.updateOne({ _id }, { $set: { accessToken } })
+    const db = await Mongo.getDb()
+    await db.collection('users').updateOne({ _id }, { $set: { accessToken } })
   }
 }

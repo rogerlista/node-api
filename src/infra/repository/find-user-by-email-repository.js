@@ -1,15 +1,13 @@
+const { Mongo } = require('../../lib/infra')
 const { ParametroObrigatorioError } = require('../../lib/error')
 
 module.exports = class FindUserByEmailRepository {
-  constructor(userModel) {
-    this.userModel = userModel
-  }
-
   async find(email) {
     if (!email) {
       throw new ParametroObrigatorioError('E-mail')
     }
-    return await this.userModel.findOne(
+    const db = await Mongo.getDb()
+    return await db.collection('users').findOne(
       {
         email,
       },
