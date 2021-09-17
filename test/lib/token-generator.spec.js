@@ -7,6 +7,16 @@ const makeSut = () => {
   return new TokenGenerator('qualquer_string_de_seguranca')
 }
 
+jest.mock('jsonwebtoken', () => ({
+  token: 'qualquer_token',
+
+  sign(id, secret) {
+    this.id = id
+    this.secret = secret
+    return this.token
+  },
+}))
+
 describe('Token Generator', () => {
   test('deve retornar null se generate retornar null', async () => {
     const sut = makeSut()
