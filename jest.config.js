@@ -3,7 +3,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   collectCoverage: true,
   coverageProvider: 'v8',
-  roots: ['<rootDir>/src', '<rootDir>/test', '<rootDir>/__mocks__'],
+  roots: ['<rootDir>/src', '<rootDir>/test'],
   testEnvironment: 'node',
   preset: '@shelf/jest-mongodb',
 }
