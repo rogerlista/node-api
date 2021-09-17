@@ -31,4 +31,12 @@ describe('Login Routes', () => {
     })
     expect(response.statusCode).toBe(200)
   })
+
+  test('deve retornar 401 quando credenciais forem inválidas', async () => {
+    const response = await request(app).post('/api/login').send({
+      email: 'email_invalido@mail.com',
+      senha: 'senha_invalida',
+    })
+    expect(response.statusCode).toBe(401)
+  })
 })
