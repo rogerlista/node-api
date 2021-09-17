@@ -159,15 +159,6 @@ describe('Login Router', () => {
     expect(httpResponse.body.accessToken).toEqual(authUseCaseSpy.accessToken)
   })
 
-  test('deve retornar o status code 500 se AuthUseCase lançar uma exceção', async () => {
-    const sut = new LoginRouter({ authUseCase: makeAuthUseCaseSpyWithError() })
-
-    const httpResponse = await sut.route(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
-  })
-
   test('deve chamar EmailValidator com o email correto', async () => {
     const { sut, emailValidatorSpy } = makeSut()
 
@@ -184,18 +175,6 @@ describe('Login Router', () => {
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new ParametroInvalidoError('E-mail'))
-  })
-
-  test('deve retornar o status code 500 se EmailValidator lançar uma exceção', async () => {
-    const sut = new LoginRouter({
-      authUseCase: makeEmailValidatorSpyWithError(),
-      emailValidator: makeAuthUseCaseSpy(),
-    })
-
-    const httpResponse = await sut.route(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('deve lançar uma exceção se qualquer uma das dependências forem inválidas', async () => {
@@ -220,6 +199,26 @@ describe('Login Router', () => {
       new LoginRouter({
         authUseCase,
         emailValidator: invalid,
+      })
+    )
+    for (const sut of suts) {
+      const httpResponse = await sut.route(httpRequest)
+      expect(httpResponse.statusCode).toBe(500)
+      expect(httpResponse.body).toEqual(new ServerError())
+    }
+  })
+
+  test('deve repassar a exceção se qualquer dependência lançar uma exceção', async () => {
+    const authUseCase = makeAuthUseCaseSpy()
+    const emailValidator = makeEmailValidatorSpy()
+    const suts = [].concat(
+      new LoginRouter({
+        authUseCase: makeAuthUseCaseSpyWithError(),
+        emailValidator,
+      }),
+      new LoginRouter({
+        authUseCase,
+        emailValidator: makeEmailValidatorSpyWithError(),
       })
     )
     for (const sut of suts) {
