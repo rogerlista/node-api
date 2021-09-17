@@ -1,3 +1,3 @@
 module.exports = {
-  mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:xxxx/clea-node-api',
+  mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017/clea-node-api',
 }
