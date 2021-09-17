@@ -5,7 +5,7 @@ const {
 const { HttpRequest } = require('../../lib')
 
 module.exports = class LoginRouter {
-  constructor(authUseCase, emailValidator) {
+  constructor({ authUseCase, emailValidator } = {}) {
     this.authUseCase = authUseCase
     this.emailValidator = emailValidator
   }

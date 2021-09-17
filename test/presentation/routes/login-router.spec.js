@@ -1,4 +1,4 @@
-const LoginRouter = require('../../../src/presentation/routes/login-router')
+const { LoginRouter } = require('../../../src/presentation/routes')
 const {
   ParametroInvalidoError,
   ParametroObrigatorioError,
@@ -9,7 +9,10 @@ const {
 const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCaseSpy()
   const emailValidatorSpy = makeEmailValidatorSpy()
-  const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy)
+  const sut = new LoginRouter({
+    authUseCase: authUseCaseSpy,
+    emailValidator: emailValidatorSpy,
+  })
 
   return {
     sut,
@@ -156,27 +159,8 @@ describe('Login Router', () => {
     expect(httpResponse.body.accessToken).toEqual(authUseCaseSpy.accessToken)
   })
 
-  test('deve retornar o status code 500 se AuthUseCase não for passado', async () => {
-    const sut = new LoginRouter()
-
-    const httpResponse = await sut.route(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
-  })
-
-  test('deve retornar o status code 500 se AuthUseCase não tiver o método auth', async () => {
-    const sut = new LoginRouter({})
-
-    const httpResponse = await sut.route(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
-  })
-
   test('deve retornar o status code 500 se AuthUseCase lançar uma exceção', async () => {
-    const authUseCaseSpy = makeAuthUseCaseSpyWithError()
-    const sut = new LoginRouter(authUseCaseSpy)
+    const sut = new LoginRouter({ authUseCase: makeAuthUseCaseSpyWithError() })
 
     const httpResponse = await sut.route(httpRequest)
 
@@ -202,34 +186,46 @@ describe('Login Router', () => {
     expect(httpResponse.body).toEqual(new ParametroInvalidoError('E-mail'))
   })
 
-  test('deve retornar o status code 500 se EmailValidator não for passado', async () => {
-    const authUseCaseSpy = makeAuthUseCaseSpy()
-    const sut = new LoginRouter(authUseCaseSpy)
-
-    const httpResponse = await sut.route(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
-  })
-
-  test('deve retornar o status code 500 se EmailValidator não tiver o método isValid', async () => {
-    const authUseCaseSpy = makeAuthUseCaseSpy()
-    const sut = new LoginRouter(authUseCaseSpy, {})
-
-    const httpResponse = await sut.route(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
-  })
-
   test('deve retornar o status code 500 se EmailValidator lançar uma exceção', async () => {
-    const emailValidatorSpy = makeEmailValidatorSpyWithError()
-    const authUseCaseSpy = makeAuthUseCaseSpy()
-    const sut = new LoginRouter(authUseCaseSpy, emailValidatorSpy)
+    const sut = new LoginRouter({
+      authUseCase: makeEmailValidatorSpyWithError(),
+      emailValidator: makeAuthUseCaseSpy(),
+    })
 
     const httpResponse = await sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('deve lançar uma exceção se qualquer uma das dependências forem inválidas', async () => {
+    const invalid = {}
+    const authUseCase = makeAuthUseCaseSpy()
+    const emailValidator = makeEmailValidatorSpy()
+    const suts = [].concat(
+      new LoginRouter(),
+      new LoginRouter({}),
+      new LoginRouter({
+        authUseCase: null,
+        emailValidator,
+      }),
+      new LoginRouter({
+        authUseCase: invalid,
+        emailValidator,
+      }),
+      new LoginRouter({
+        authUseCase,
+        emailValidator: null,
+      }),
+      new LoginRouter({
+        authUseCase,
+        emailValidator: invalid,
+      })
+    )
+    for (const sut of suts) {
+      const httpResponse = await sut.route(httpRequest)
+      expect(httpResponse.statusCode).toBe(500)
+      expect(httpResponse.body).toEqual(new ServerError())
+    }
   })
 })
